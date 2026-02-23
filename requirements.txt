@@ -1,5 +1,5 @@
-pandas==2.1.4
-SQLAlchemy==1.4.36
-psycopg2-binary==2.9.5
-requests==2.31.0
+pandas
+SQLAlchemy
+psycopg2-binary
+requests
 dotenv

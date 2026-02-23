@@ -8,4 +8,6 @@ df =pd.read_parquet(url)
 
 df.to_csv("nigerian_retail_and_ecommerce_competitor_pricing_datasets.csv", index=False)
 
+
+
 print(df.head())
