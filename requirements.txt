@@ -1,5 +1,5 @@
 pandas
-SQLAlchemy
 psycopg2-binary
-requests
-dotenv
+fsspec
+huggingface_hub
+datasets
