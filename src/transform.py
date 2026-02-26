@@ -25,10 +25,9 @@ def transform():
     df['percent_change'] = df['percent_change'].round(2)
 
 # compare prices for price position
-    
     df['price_position'] = np.where(df['our_price_ngn']  < df['competitor_price_ngn'], 'Cheaper', 'Expensive')
     df['price_position'] = np.where(df['our_price_ngn']  > df['competitor_price_ngn'], 'Expensive', 'Cheaper')
-    df['price_position'] = np.where(df['our_price_ngn']  == df['competitor_price_ngn'], 'Matched', 'Unmatch')
+ #  df['price_position'] = np.where(df['our_price_ngn']  == df['competitor_price_ngn'], 'Matched')
 
 # Reorder columns
     cols = [

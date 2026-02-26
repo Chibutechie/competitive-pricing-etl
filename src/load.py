@@ -25,6 +25,7 @@ def load():
     df = pd.read_csv(BASE_DIR / "data" / "processed" / "sales_clean.csv")
     df.to_sql(                 
         name="competitor_pricing",
+        schema="public",
         con=engine,
         if_exists="replace",
         index=False
