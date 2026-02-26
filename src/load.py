@@ -6,6 +6,7 @@ from pathlib import Path
 
 load_dotenv()
 
+# database connection string 
 connection_string = (
     f"postgresql+psycopg2://"
     f"{os.getenv('DB_USERNAME')}:"
@@ -19,6 +20,7 @@ engine = create_engine(connection_string)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# load data to database
 def load():
     df = pd.read_csv(BASE_DIR / "data" / "processed" / "sales_clean.csv")
     df.to_sql(                 
