@@ -2,6 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
 load_dotenv()
 
@@ -16,13 +17,16 @@ connection_string = (
 
 engine = create_engine(connection_string)
 
-df = pd.read_csv("nigerian_retail_and_ecommerce_competitor_pricing_datasets.csv")
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-df.to_sql(
-    name="competitor_pricing",
-    con=engine,
-    if_exists="replace",
-    index=False
-)
+def load():
+    df = pd.read_csv(BASE_DIR / "data" / "processed" / "sales_clean.csv")
+    df.to_sql(                 
+        name="competitor_pricing",
+        con=engine,
+        if_exists="replace",
+        index=False
+    )
+    print("Successfully connected and loaded data")
 
-print("Successfully connected and loaded data")
+load()                          
