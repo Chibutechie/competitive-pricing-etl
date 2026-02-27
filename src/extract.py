@@ -9,9 +9,7 @@ raw_path.mkdir(parents=True, exist_ok=True)
 
 # extract fucntion
 def extract():
-    df = pd.read_parquet(
-        "hf://datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/data/nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet"
-    )
+    df = pd.read_parquet("hf://datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/data/nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet")
 
     print(df.head())
 
