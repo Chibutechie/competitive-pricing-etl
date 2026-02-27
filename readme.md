@@ -88,3 +88,6 @@ The technologies used in this project are:
 
 * [Python](https://www.python.org/) - Python is one of the top programming languages in the world, widely used in fields such as AI, machine learning, data science, data engineering, analytics, and web development.
 * [PostgreSQL](https://www.bing.com/ck/a?!&&p=922469d6d00c5be8c140c58da82682967e4adf2fdd68fbf1499019ca4d0b69a5JmltdHM9MTc3MjE1MDQwMA&ptn=3&ver=2&hsh=4&fclid=388b4c21-b235-6a9f-197f-5a9cb3b46b14&psq=POStgresql&u=a1aHR0cHM6Ly93d3cucG9zdGdyZXNxbC5vcmcvZG93bmxvYWQv) - PostgreSQL, often simply called "Postgres," is an advanced, open-source object-relational database management system (ORDBMS).
+* [Power BI](https://learn.microsoft.com/en-us/power-bi/fundamentals/power-bi-overview) - Power BI is Microsoft's business analytics platform that helps you turn data into actionable insights.
+
+---
