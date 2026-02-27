@@ -79,15 +79,26 @@ Schema from the source:
 | `date_checked`             | String  | `2024-08-06`  |
 | `in_stock_competitor`      | Boolean | `False`       |
 
-
 ---
 
 ## Technologies
 
 The technologies used in this project are:
 
-* [Python](https://www.python.org/) - Python is one of the top programming languages in the world, widely used in fields such as AI, machine learning, data science, data engineering, analytics, and web development.
-* [PostgreSQL](https://www.bing.com/ck/a?!&&p=922469d6d00c5be8c140c58da82682967e4adf2fdd68fbf1499019ca4d0b69a5JmltdHM9MTc3MjE1MDQwMA&ptn=3&ver=2&hsh=4&fclid=388b4c21-b235-6a9f-197f-5a9cb3b46b14&psq=POStgresql&u=a1aHR0cHM6Ly93d3cucG9zdGdyZXNxbC5vcmcvZG93bmxvYWQv) - PostgreSQL, often simply called "Postgres," is an advanced, open-source object-relational database management system (ORDBMS).
-* [Power BI](https://learn.microsoft.com/en-us/power-bi/fundamentals/power-bi-overview) - Power BI is Microsoft's business analytics platform that helps you turn data into actionable insights.
+- [Python](https://www.python.org/) - Python is one of the top programming languages in the world, widely used in fields such as AI, machine learning, data science, data engineering, analytics, and web development.
+- [PostgreSQL](https://www.bing.com/ck/a?!&&p=922469d6d00c5be8c140c58da82682967e4adf2fdd68fbf1499019ca4d0b69a5JmltdHM9MTc3MjE1MDQwMA&ptn=3&ver=2&hsh=4&fclid=388b4c21-b235-6a9f-197f-5a9cb3b46b14&psq=POStgresql&u=a1aHR0cHM6Ly93d3cucG9zdGdyZXNxbC5vcmcvZG93bmxvYWQv) - PostgreSQL, often simply called "Postgres," is an advanced, open-source object-relational database management system (ORDBMS).
+- [Power BI](https://learn.microsoft.com/en-us/power-bi/fundamentals/power-bi-overview) - Power BI is Microsoft's business analytics platform that helps you turn data into actionable insights.
+- [VS Code](https://code.visualstudio.com/) - IDE for programming.
 
 ---
+
+## Reproducibility
+
+This section will guide you on how to recreate this project
+
+### 1) 
+1. Setup a hugging face account.
+2. Download VS Code or any IDE you are convienet with.
+3) Download PG Admin with this [link](https://www.postgresql.org/download/)
+
+
