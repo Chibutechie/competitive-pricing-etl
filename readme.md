@@ -67,13 +67,15 @@ The dataset used for this project can be accessed [here](https://huggingface.co/
 
 Schema from the source:
 
-* comparison_id	- String - COMP0000000
-* product_id - String - PRD80182
-* product_name - String - Option
-* our_price_ngn - Float - 298984.47
-* competitor_name - String - Spar
-* competitor_price_ngn - Float - 333817.21
-* price_difference_ngn - Float - 45159.28
-* price_difference_percent - Float - 8.85
-* date_checked - String - 2024-08-06
-* in_stock_competitor - Boolean - False
+| Field | Type | Example |
+|-------|------|---------|
+| `comparison_id` | String | `COMP0000000` |
+| `product_id` | String | `PRD80182` |
+| `product_name` | String | `Option` |
+| `our_price_ngn` | Float | `298984.47` |
+| `competitor_name` | String | `Spar` |
+| `competitor_price_ngn` | Float | `333817.21` |
+| `price_difference_ngn` | Float | `45159.28` |
+| `price_difference_percent` | Float | `8.85` |
+| `date_checked` | String | `2024-08-06` |
+| `in_stock_competitor` | Boolean | `False` |
