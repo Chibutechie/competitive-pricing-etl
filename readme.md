@@ -75,7 +75,7 @@ competitive-pricing-etl/
 - create a new column for price_difference_percent. 
 - Compare prices for position rank. 
 - Reorder columns. 
-- Move cleaned and transformed data to `data` / `processed`/ `sales_clean.csv`. 
+- Move cleaned and transformed data to `data/processed/sales_clean.csv`. 
 
 ### Load
 - Connect to PSQL using envrionment variables. 
