@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 105 1000 675" width="1000" height="675" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <!-- Title gradient -->
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <!-- Arrowhead -->
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    <!-- Node drop shadow filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <!-- Glow filter for particles -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect y="105" width="1000" height="675" fill="url(#bg)"/>
+
+  <!-- ══════════════════════════════════════════
+       NODE HELPER: rect + colored top-border + title + desc
+  ══════════════════════════════════════════ -->
+
+  <!-- ── Hugging Face API  (center x=300, y=160) ── -->
+  <g filter="url(#shadow)">
+    <rect x="170" y="130" width="260" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="170" y="130" width="260" height="3" rx="2" fill="#fbbf24"/>
+  </g>
+  <text x="300" y="157" text-anchor="middle" font-size="15" font-weight="600" fill="#fbbf24">🤗  Hugging Face API</text>
+  <text x="300" y="175" text-anchor="middle" font-size="13" fill="#94a3b8">Source Data Provider</text>
+
+  <!-- ── extract.py  (center x=300, y=300) ── -->
+  <g filter="url(#shadow)">
+    <rect x="170" y="270" width="260" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="170" y="270" width="260" height="3" rx="2" fill="#38bdf8"/>
+  </g>
+  <text x="300" y="297" text-anchor="middle" font-size="15" font-weight="600" fill="#38bdf8">📥  extract.py</text>
+  <text x="300" y="315" text-anchor="middle" font-size="13" fill="#94a3b8">Data Ingestion Script</text>
+
+  <!-- ── transform.py  (center x=300, y=440) ── -->
+  <g filter="url(#shadow)">
+    <rect x="170" y="410" width="260" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="170" y="410" width="260" height="3" rx="2" fill="#818cf8"/>
+  </g>
+  <text x="300" y="437" text-anchor="middle" font-size="15" font-weight="600" fill="#818cf8">⚙  transform.py</text>
+  <text x="300" y="455" text-anchor="middle" font-size="13" fill="#94a3b8">Cleaning &amp; Metric Calculation</text>
+
+  <!-- ── load.py  (center x=300, y=580) ── -->
+  <g filter="url(#shadow)">
+    <rect x="170" y="550" width="260" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="170" y="550" width="260" height="3" rx="2" fill="#c084fc"/>
+  </g>
+  <text x="300" y="577" text-anchor="middle" font-size="15" font-weight="600" fill="#c084fc">📤  load.py</text>
+  <text x="300" y="595" text-anchor="middle" font-size="13" fill="#94a3b8">Database Insertion</text>
+
+  <!-- ── Power BI  (center x=300, y=720) ── -->
+  <g filter="url(#shadow)">
+    <rect x="170" y="690" width="260" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="170" y="690" width="260" height="3" rx="2" fill="#34d399"/>
+  </g>
+  <text x="300" y="717" text-anchor="middle" font-size="15" font-weight="600" fill="#34d399">📊  Power BI Dashboard</text>
+  <text x="300" y="735" text-anchor="middle" font-size="13" fill="#94a3b8">Business Intelligence Reporting</text>
+
+  <!-- ── data/raw/competitor_pricing.csv  (center x=710, y=300) ── -->
+  <g filter="url(#shadow)">
+    <rect x="560" y="270" width="300" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="560" y="270" width="300" height="3" rx="2" fill="#a78bfa"/>
+  </g>
+  <text x="710" y="293" text-anchor="middle" font-size="13" font-weight="600" fill="#a78bfa">📄  data/raw/competitor_pricing.csv</text>
+  <text x="710" y="315" text-anchor="middle" font-size="13" fill="#94a3b8">Raw Data Storage</text>
+
+  <!-- ── data/processed/sales_clean.csv  (center x=710, y=440) ── -->
+  <g filter="url(#shadow)">
+    <rect x="560" y="410" width="300" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="560" y="410" width="300" height="3" rx="2" fill="#a78bfa"/>
+  </g>
+  <text x="710" y="433" text-anchor="middle" font-size="13" font-weight="600" fill="#a78bfa">✨  data/processed/sales_clean.csv</text>
+  <text x="710" y="455" text-anchor="middle" font-size="13" fill="#94a3b8">Processed Data Storage</text>
+
+  <!-- ── PostgreSQL  (center x=710, y=580) ── -->
+  <g filter="url(#shadow)">
+    <rect x="560" y="550" width="300" height="60" rx="12" fill="rgba(30,41,59,0.85)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="560" y="550" width="300" height="3" rx="2" fill="#f472b6"/>
+  </g>
+  <text x="710" y="577" text-anchor="middle" font-size="15" font-weight="600" fill="#f472b6">🐘  PostgreSQL</text>
+  <text x="710" y="595" text-anchor="middle" font-size="13" fill="#94a3b8">competitor_pricing DB</text>
+
+  <!-- ══════════════════════════════════════════
+       CONNECTOR PATHS
+  ══════════════════════════════════════════ -->
+
+  <!-- Vertical: HF -> EXT -->
+  <path id="v1" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)" d="M 300 193 L 300 268">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="20s" repeatCount="indefinite"/>
+  </path>
+  <!-- Vertical: EXT -> TRN -->
+  <path id="v2" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)" d="M 300 333 L 300 408">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="20s" repeatCount="indefinite"/>
+  </path>
+  <!-- Vertical: TRN -> LOD -->
+  <path id="v3" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)" d="M 300 473 L 300 548">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="20s" repeatCount="indefinite"/>
+  </path>
+  <!-- Vertical: LOD -> PBI -->
+  <path id="v4" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)" d="M 300 613 L 300 688">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="20s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Horizontal: EXT -> RAW -->
+  <path id="h1" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)" d="M 433 300 L 558 300">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="20s" repeatCount="indefinite"/>
+  </path>
+  <!-- Horizontal: TRN -> CLN -->
+  <path id="h2" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)" d="M 433 440 L 558 440">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="20s" repeatCount="indefinite"/>
+  </path>
+  <!-- Horizontal: LOD -> DB -->
+  <path id="h3" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)" d="M 433 580 L 558 580">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="20s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- ══════════════════════════════════════════
+       ANIMATED PARTICLES
+  ══════════════════════════════════════════ -->
+
+  <!-- HF -> EXT -->
+  <circle r="4" fill="#fbbf24" filter="url(#glow)">
+    <animateMotion dur="2s" repeatCount="indefinite"><mpath href="#v1"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#fbbf24" filter="url(#glow)">
+    <animateMotion dur="2s" begin="1s" repeatCount="indefinite"><mpath href="#v1"/></animateMotion>
+  </circle>
+
+  <!-- EXT -> TRN -->
+  <circle r="4" fill="#38bdf8" filter="url(#glow)">
+    <animateMotion dur="2s" begin="0.8s" repeatCount="indefinite"><mpath href="#v2"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#38bdf8" filter="url(#glow)">
+    <animateMotion dur="2s" begin="1.8s" repeatCount="indefinite"><mpath href="#v2"/></animateMotion>
+  </circle>
+
+  <!-- TRN -> LOD -->
+  <circle r="4" fill="#818cf8" filter="url(#glow)">
+    <animateMotion dur="2s" begin="1.6s" repeatCount="indefinite"><mpath href="#v3"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#818cf8" filter="url(#glow)">
+    <animateMotion dur="2s" begin="2.6s" repeatCount="indefinite"><mpath href="#v3"/></animateMotion>
+  </circle>
+
+  <!-- LOD -> PBI -->
+  <circle r="4" fill="#c084fc" filter="url(#glow)">
+    <animateMotion dur="2s" begin="2.4s" repeatCount="indefinite"><mpath href="#v4"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#c084fc" filter="url(#glow)">
+    <animateMotion dur="2s" begin="3.4s" repeatCount="indefinite"><mpath href="#v4"/></animateMotion>
+  </circle>
+
+  <!-- EXT -> RAW -->
+  <circle r="4" fill="#a78bfa" filter="url(#glow)">
+    <animateMotion dur="1.5s" begin="0.5s" repeatCount="indefinite"><mpath href="#h1"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#a78bfa" filter="url(#glow)">
+    <animateMotion dur="1.5s" begin="1.25s" repeatCount="indefinite"><mpath href="#h1"/></animateMotion>
+  </circle>
+
+  <!-- TRN -> CLN -->
+  <circle r="4" fill="#a78bfa" filter="url(#glow)">
+    <animateMotion dur="1.5s" begin="1.3s" repeatCount="indefinite"><mpath href="#h2"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#a78bfa" filter="url(#glow)">
+    <animateMotion dur="1.5s" begin="2.05s" repeatCount="indefinite"><mpath href="#h2"/></animateMotion>
+  </circle>
+
+  <!-- LOD -> DB -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)">
+    <animateMotion dur="1.5s" begin="2.1s" repeatCount="indefinite"><mpath href="#h3"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#f472b6" filter="url(#glow)">
+    <animateMotion dur="1.5s" begin="2.85s" repeatCount="indefinite"><mpath href="#h3"/></animateMotion>
+  </circle>
+
+</svg>
