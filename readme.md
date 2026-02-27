@@ -63,7 +63,23 @@ competitive-pricing-etl/
 
 ## How it works
 
+### Extract 
+- Collects the data from hugging face.
+- Saves the data to `data`/ `raw` / `competitor_pricing.csv`. 
 
+### Transform
+- Define the function 'transform'
+- Drops empty rows and normalizes the column headers.
+- Drop price_difference_ngn, price_difference_percent columns. 
+- Create price_difference_ngn and percent_change. 
+- create a new column for price_difference_percent. 
+- Compare prices for position rank. 
+- Reorder columns. 
+- Move cleaned and transformed data to `data` / `processed`/ `sales_clean.csv`. 
+
+### Load
+- Connect to PSQL using envrionment variables. 
+- Load data into a database called `competitor_pricing`.
 
 ## Dataset
 
