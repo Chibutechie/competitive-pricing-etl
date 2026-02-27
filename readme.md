@@ -12,7 +12,7 @@ In this repository are the scripts and methodologies used in extracting competit
 - [Architecture Flow](#architecture-flow)
 - [How it works](#how-it-works)
 - [Technologies](#technologies)
-- [Reproducibilty](#reproducibilty)
+- [Setup Instructions](#setuo-instructions)
 - [Dashboard](#dashboard)
 
 ---
@@ -113,18 +113,34 @@ The technologies used in this project are:
 
 ---
 
-## Reproducibility
+## Setup Instructions
 
 This section will guide you on how to recreate this project
 
-## 1) Pre-requisites
-1. Setup a hugging face account.
-2. Download VS Code or any IDE you are convienet with.
-3) Download PG Admin with this [link](https://www.postgresql.org/download/)
+## 1) Clone the project repo
+```bash
+git clone https://github.com/Chibutechie/competitive-pricing-etl.git
+cd competitive_pricing_etl
+```
 
 ## 2) Setting up your work environment
-1) Create your virtual environment 
+Create your virtual environment 
 
 ```bash
 python -m venv myenv
-``` 
+```
+
+### Install dependencies
+```bash
+pip install -r requirement.txt
+```
+
+### Configure credentials
+Create a .env file ```touch .env``` and update with the necessary credentials
+```
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=database_name
+```
