@@ -65,7 +65,7 @@ competitive-pricing-etl/
 
 ### Extract 
 - Collects the data from hugging face.
-- Saves the data to `data`/ `raw` / `competitor_pricing.csv`. 
+- Saves the data to `data/raw/competitor_pricing.csv`. 
 
 ### Transform
 - Define the function 'transform'
@@ -122,4 +122,9 @@ This section will guide you on how to recreate this project
 2. Download VS Code or any IDE you are convienet with.
 3) Download PG Admin with this [link](https://www.postgresql.org/download/)
 
-## 2) 
+## 2) Setting up your work environment
+1) Create your virtual environment 
+
+```bash
+python -m venv myenv
+``` 
