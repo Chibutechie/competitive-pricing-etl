@@ -51,8 +51,8 @@ competitive-pricing-etl/
 │   └── processed/
 │       └── sales_clean.csv
 │
-├── requirements.txt
-└── README.md
+├── readme.md
+└── requirements.txt
 ```
 
 ---
