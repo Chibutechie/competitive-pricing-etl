@@ -22,7 +22,7 @@
 
 This pipeline extracts, cleans, and loads data from the [Hugging Face Nigerian Retail & E-commerce Competitor Pricing Dataset](https://huggingface.co/datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/viewer) into a PostgreSQL database for competitive market analysis.
 
-What started as a simple data ingestion project evolved into a full competitive intelligence solution. The core question shifted from *"How is the business performing?"* to *"How are we positioned in the market?"* — which drove the creation of derived metrics and a full BI report.
+What started as a simple data ingestion project evolved into a full competitive intelligence solution. The core question shifted from *"How is the business performing?"* to *"How are we positioned in the market?"*; which drove the creation of derived metrics and a full BI report.
 
 ---
 
@@ -41,9 +41,9 @@ What started as a simple data ingestion project evolved into a full competitive 
 competitive-pricing-etl/
 │
 ├── src/
-│   ├── extract.py          # Pulls data from Hugging Face API
-│   ├── transform.py        # Cleans, enriches, and restructures data
-│   └── load.py             # Loads processed data into PostgreSQL
+│   ├── extract.py         
+│   ├── transform.py       
+│   └── load.py            
 │
 ├── data/
 │   ├── raw/
@@ -173,11 +173,11 @@ DB_NAME=database_name
 ```python
 from src.extract import extract
 from src.transform import transform
-from src.load import get_engine
+from src.load import load
 
 extract()
 transform()
-get_engine()
+load()
 ```
 
 Then verify that data has been loaded into your PostgreSQL database.
