@@ -10,6 +10,7 @@ In this repository are the scripts and methodologies used in extracting competit
 - [Project Objective](#project-objective)
 - [Project Structure](#project-structure)
 - [Architecture Flow](#architecture-flow)
+- [How it works](#how-it-works)
 - [Technologies](#technologies)
 - [Reproducibilty](#reproducibilty)
 - [Dashboard](#dashboard)
@@ -60,6 +61,10 @@ competitive-pricing-etl/
 
 ---
 
+## How it works
+
+
+
 ## Dataset
 
 The dataset used for this project can be accessed [here](https://huggingface.co/datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/viewer).
@@ -96,9 +101,9 @@ The technologies used in this project are:
 
 This section will guide you on how to recreate this project
 
-### 1) 
+## 1) Pre-requisites
 1. Setup a hugging face account.
 2. Download VS Code or any IDE you are convienet with.
 3) Download PG Admin with this [link](https://www.postgresql.org/download/)
 
-
+## 2) 
