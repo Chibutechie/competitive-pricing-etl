@@ -22,7 +22,7 @@
 
 This pipeline extracts, cleans, and loads data from the [Hugging Face Nigerian Retail & E-commerce Competitor Pricing Dataset](https://huggingface.co/datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/viewer) into a PostgreSQL database for competitive market analysis.
 
-What started as a simple data ingestion project evolved into a full competitive intelligence solution. The core question shifted from *"How is the business performing?"* to *"How are we positioned in the market?"*; which drove the creation of derived metrics and a full BI report.
+What started as a simple data ingestion project evolved into a full competitive intelligence solution. The core question shifted from _"How is the business performing?"_ to _"How are we positioned in the market?"_; which drove the creation of derived metrics and a full BI report.
 
 ---
 
@@ -41,9 +41,9 @@ What started as a simple data ingestion project evolved into a full competitive 
 competitive-pricing-etl/
 │
 ├── src/
-│   ├── extract.py         
-│   ├── transform.py       
-│   └── load.py            
+│   ├── extract.py
+│   ├── transform.py
+│   └── load.py
 │
 ├── data/
 │   ├── raw/
@@ -59,31 +59,19 @@ competitive-pricing-etl/
 
 ## Architecture Flow
 
-```
-Hugging Face API
-      │
-      ▼
-  extract.py  ──────► data/raw/competitor_pricing.csv
-      │
-      ▼
- transform.py  ─────► data/processed/sales_clean.csv
-      │
-      ▼
-   load.py  ──────────► PostgreSQL (competitor_pricing DB)
-      │
-      ▼
-  Power BI Dashboard
-```
+![Architecture Flow](image/architecture_flow.svg)
 
 ---
 
 ## How It Works
 
 ### Extract
+
 - Connects to the Hugging Face dataset API
 - Saves raw data to `data/raw/competitor_pricing.csv`
 
 ### Transform
+
 - Drops null rows and normalizes column headers
 - Removes source `price_difference_ngn` and `price_difference_percent` columns
 - Recalculates `price_difference_ngn` and `price_difference_percent` from scratch
@@ -92,6 +80,7 @@ Hugging Face API
 - Saves output to `data/processed/sales_clean.csv`
 
 ### Load
+
 - Connects to PostgreSQL using environment variables
 - Loads the cleaned data into the `competitor_pricing` database
 
@@ -101,29 +90,29 @@ Hugging Face API
 
 Source: [Hugging Face Dataset](https://huggingface.co/datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/viewer)
 
-| Field | Type | Example |
-|---|---|---|
-| `comparison_id` | String | `COMP0000000` |
-| `product_id` | String | `PRD80182` |
-| `product_name` | String | `Option` |
-| `our_price_ngn` | Float | `298984.47` |
-| `competitor_name` | String | `Spar` |
-| `competitor_price_ngn` | Float | `333817.21` |
-| `price_difference_ngn` | Float | `-45159.28` |
-| `price_difference_percent` | Float | `8.85` |
-| `date_checked` | String | `2024-08-06` |
-| `in_stock_competitor` | Boolean | `False` |
+| Field                      | Type    | Example       |
+| -------------------------- | ------- | ------------- |
+| `comparison_id`            | String  | `COMP0000000` |
+| `product_id`               | String  | `PRD80182`    |
+| `product_name`             | String  | `Option`      |
+| `our_price_ngn`            | Float   | `298984.47`   |
+| `competitor_name`          | String  | `Spar`        |
+| `competitor_price_ngn`     | Float   | `333817.21`   |
+| `price_difference_ngn`     | Float   | `-45159.28`   |
+| `price_difference_percent` | Float   | `8.85`        |
+| `date_checked`             | String  | `2024-08-06`  |
+| `in_stock_competitor`      | Boolean | `False`       |
 
 ---
 
 ## Technologies
 
-| Tool | Purpose |
-|---|---|
-| [Python](https://www.python.org/) | Pipeline scripting (extract, transform, load) |
-| [PostgreSQL](https://www.postgresql.org/) | Relational database for storing processed data |
-| [Power BI](https://learn.microsoft.com/en-us/power-bi/fundamentals/power-bi-overview) | Business intelligence dashboard |
-| [VS Code](https://code.visualstudio.com/) | Development environment |
+| Tool                                                                                  | Purpose                                        |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [Python](https://www.python.org/)                                                     | Pipeline scripting (extract, transform, load)  |
+| [PostgreSQL](https://www.postgresql.org/)                                             | Relational database for storing processed data |
+| [Power BI](https://learn.microsoft.com/en-us/power-bi/fundamentals/power-bi-overview) | Business intelligence dashboard                |
+| [VS Code](https://code.visualstudio.com/)                                             | Development environment                        |
 
 ---
 
