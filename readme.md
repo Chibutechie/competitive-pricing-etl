@@ -68,7 +68,6 @@ competitive-pricing-etl/
 - Saves the data to `data/raw/competitor_pricing.csv`. 
 
 ### Transform
-- Define the function 'transform'
 - Drops empty rows and normalizes the column headers.
 - Drop price_difference_ngn, price_difference_percent columns. 
 - Create price_difference_ngn and percent_change. 
@@ -136,7 +135,7 @@ pip install -r requirement.txt
 ```
 
 ### Configure credentials
-Create a .env file ```touch .env``` and update with the necessary credentials
+Create .env file ```touch .env``` and update with the necessary credentials
 ```
 DB_USER=your_username
 DB_PASSWORD=your_password
@@ -144,3 +143,23 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=database_name
 ```
+
+### Run the pipeline
+```
+from src.extract import extract
+from src.transform import transform
+from src.load import get_engine
+```
+Check your database to make sure the data is loaded properly.
+
+
+## 3) Dashboard
+1) Create a blank report on Power BI
+2) Select GetData, click on Database, and click on PostgreSQL database. More info [here](https://learn.microsoft.com/en-us/power-bi/connect-data/)
+3) Connect to your server using the roght credentials.
+4) Load the data into Power Query editor for transformation - cleaning, data type normalization.
+5) Close and apply the transformed data into Power BI.
+6) Create a new table for the date table.
+7) Create your report.
+
+---
