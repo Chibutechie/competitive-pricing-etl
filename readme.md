@@ -42,8 +42,9 @@ competitive-pricing-etl/
 │
 ├── src/
 │   ├── extract.py
-│   ├── transform.py
-│   └── load.py
+│   ├── load.py
+│   ├── main.py
+│   └── transform.py
 │
 ├── data/
 │   ├── raw/
