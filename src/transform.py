@@ -25,7 +25,16 @@ def transform():
         (df["our_price_ngn"] - df["competitor_price_ngn"]) / df["competitor_price_ngn"] * 100
     ).round(2)
 
-    # price position — all three cases covered
+    # time-based feature engineering
+    df["date_checked"] = pd.to_datetime(df["date_checked"])
+    df["year"]         = df["date_checked"].dt.year
+    df["month"]        = df["date_checked"].dt.month
+    df["month_name"]   = df["date_checked"].dt.strftime("%B")
+    df["week_number"]  = df["date_checked"].dt.isocalendar().week.astype(int)
+    df["day_of_week"]  = df["date_checked"].dt.strftime("%A")
+    df["is_weekend"]   = df["date_checked"].dt.dayofweek >= 5
+
+    # price position
     df['price_position'] = np.where(df['our_price_ngn'] < df['competitor_price_ngn'],'Cheaper',
         np.where(df['our_price_ngn'] > df['competitor_price_ngn'],'Expensive','Matched') )
     
@@ -41,6 +50,12 @@ def transform():
         "percent_change",
         "price_position",
         "date_checked",
+        "year",
+        "month",
+        "month_name",
+        "week_number",
+        "day_of_week",
+        "is_weekend",
         "in_stock_competitor",
     ]
 
