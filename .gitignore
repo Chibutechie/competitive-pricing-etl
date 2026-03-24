@@ -1,26 +1,4 @@
 # Environment variables — never commit credentials
 .env
 
-# Python
 __pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.egg-info/
-dist/
-build/
-.eggs/
-
-# Virtual environment
-myenv/
-venv/
-.venv/
-env/
-
-# Data files (can be large)
-data/raw/
-data/processed/
-
-# IDE
-.vscode/
-.idea/
