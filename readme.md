@@ -176,7 +176,7 @@ Then verify that data has been loaded into your PostgreSQL database.
 
 ## Dashboard
 
-![Dashboard](bi_report/CompetitivePricingReport.jpg)
+[![Dashboard](bi_report/Competitive%20Pricing%20Report.jpg)](bi_report/Competitive%20Pricing%20Report.jpg)
 
 The Power BI dashboard connects directly to PostgreSQL and visualizes competitive pricing positions across products and competitors.
 
