@@ -176,6 +176,8 @@ Then verify that data has been loaded into your PostgreSQL database.
 
 ## Dashboard
 
+[![Power BI Report](https://img.shields.io/badge/Power%20BI-View%20Report-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://app.powerbi.com/view?r=eyJrIjoiOGJhZDRkOGItZjNmOC00ZjgxLTllZDEtZmIyZWQ3N2YxOGIxIiwidCI6IjNhMjMyMDE5LWYxZWItNDM4Zi04OTMyLTczYWMxZDUzMjRmZCJ9)
+
 The Power BI dashboard connects directly to PostgreSQL and visualizes competitive pricing positions across products and competitors.
 
 ### Setup Steps
