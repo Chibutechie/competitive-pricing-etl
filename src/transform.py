@@ -22,7 +22,7 @@ def transform():
 
     # recalculate price difference (%)
     df["percent_change"] = (
-        (df["our_price_ngn"] - df["competitor_price_ngn"]) / df["competitor_price_ngn"] * 100
+        (df["our_price_ngn"] - df["competitor_price_ngn"]) / df["competitor_price_ngn"]
     ).round(2)
 
     # time-based feature engineering
