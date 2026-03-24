@@ -5,40 +5,56 @@ import numpy as np
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-def transform():
-    raw_file = BASE_DIR / "data" / "raw" / "competitor_pricing.csv"
-    processed_file = BASE_DIR / "data" / "processed" / "sales_clean.csv"
+def transform() -> pd.DataFrame:
+    """
+    Transforms data by cleaning, validating, and enriching it
+    with additional analytical features.
+    """
 
-    # drop empty rows and normalize column headers
-    df = pd.read_csv(raw_file)
+    raw_file: Path = BASE_DIR / "data" / "raw" / "competitor_pricing.csv"
+    processed_file: Path = BASE_DIR / "data" / "processed" / "sales_clean.csv"
+
+    # Load raw data
+    df: pd.DataFrame = pd.read_csv(raw_file)
+
+    # Clean data
     df = df.dropna().drop_duplicates()
     df.columns = df.columns.str.lower()
 
-    # drop source price_difference columns and recalculate from scratch
-    df = df.drop(columns=["price_difference_ngn", "price_difference_percent"], inplace=False)
+    # Drop existing price difference columns
+    df = df.drop(columns=["price_difference_ngn", "price_difference_percent"], errors="ignore")
 
-    # recalculate price difference (NGN)
-    df["price_difference_ngn"] = (df["our_price_ngn"] - df["competitor_price_ngn"]).round(2)
+    # Recalculate price difference (NGN)
+    df["price_difference_ngn"] = (
+        df["our_price_ngn"] - df["competitor_price_ngn"]
+    ).round(2)
 
-    # recalculate price difference (%)
+    # Recalculate price difference (%)
     df["percent_change"] = (
         (df["our_price_ngn"] - df["competitor_price_ngn"]) / df["competitor_price_ngn"]
     ).round(2)
 
-    # time-based feature engineering
+    # Time-based feature engineering
     df["date_checked"] = pd.to_datetime(df["date_checked"])
-    df["year"]         = df["date_checked"].dt.year
-    df["month"]        = df["date_checked"].dt.month
-    df["month_name"]   = df["date_checked"].dt.strftime("%B")
-    df["week_number"]  = df["date_checked"].dt.isocalendar().week.astype(int)
-    df["day_of_week"]  = df["date_checked"].dt.strftime("%A")
-    df["is_weekend"]   = df["date_checked"].dt.dayofweek >= 5
+    df["year"] = df["date_checked"].dt.year
+    df["month"] = df["date_checked"].dt.month
+    df["month_name"] = df["date_checked"].dt.strftime("%B")
+    df["week_number"] = df["date_checked"].dt.isocalendar().week.astype(int)
+    df["day_of_week"] = df["date_checked"].dt.strftime("%A")
+    df["is_weekend"] = df["date_checked"].dt.dayofweek >= 5
 
-    # price position
-    df['price_position'] = np.where(df['our_price_ngn'] < df['competitor_price_ngn'],'Cheaper',
-        np.where(df['our_price_ngn'] > df['competitor_price_ngn'],'Expensive','Matched') )
-    
-    # reorder columns
+    # Price position classification
+    df["price_position"] = np.where(
+        df["our_price_ngn"] < df["competitor_price_ngn"],
+        "Cheaper",
+        np.where(
+            df["our_price_ngn"] > df["competitor_price_ngn"],
+            "Expensive",
+            "Matched",
+        ),
+    )
+
+    # Reorder columns
     cols = [
         "comparison_id",
         "product_id",
@@ -61,9 +77,14 @@ def transform():
 
     df = df[cols]
 
+    # Save processed data
     processed_file.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(processed_file, index=False)
+
     print(f"Saved {len(df)} cleaned rows to {processed_file}")
+
+    return df
+
 
 if __name__ == "__main__":
     transform()
