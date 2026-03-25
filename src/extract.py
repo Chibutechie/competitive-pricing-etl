@@ -20,10 +20,6 @@ def extract() -> pd.DataFrame:
         "/data/nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet"
     )
 
-    # Save as CSV
-    output: Path = raw_path / "competitor_pricing.csv"
-    df.to_csv(output, index=False)
-
     print(f"Extracted {len(df)} rows")
 
     return df

@@ -30,8 +30,8 @@ def load() -> None:
     engine: Engine = create_engine(connection_string)
 
     # Read transformed data
-    file_path: Path = BASE_DIR / "data" / "processed" / "sales_clean.csv"
-    df: pd.DataFrame = pd.read_csv(file_path)
+    file_path: Path = BASE_DIR / "data" / "processed" / "sales_clean.parquet"
+    df: pd.DataFrame = pd.read_parquet(file_path)
 
     # Load into PostgreSQL
     df.to_sql(

@@ -1,6 +1,7 @@
 from pathlib import Path
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,13 +12,18 @@ def transform() -> pd.DataFrame:
     with additional analytical features.
     """
 
-    raw_file: Path = BASE_DIR / "data" / "raw" / "competitor_pricing.csv"
-    processed_file: Path = BASE_DIR / "data" / "processed" / "sales_clean.csv"
+    raw_file: Path = (
+        BASE_DIR
+        / "data"
+        / "raw"
+        / "nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet"
+    )
+    processed_file: Path = BASE_DIR / "data" / "processed" / "sales_clean.parquet"
 
-    # Load raw data
-    df: pd.DataFrame = pd.read_csv(raw_file)
+    # Load raw data                                                       
+    df: pd.DataFrame = pd.read_parquet(raw_file)
 
-    # Clean data
+     # Clean data
     df = df.dropna().drop_duplicates()
     df.columns = df.columns.str.lower()
 
@@ -76,10 +82,9 @@ def transform() -> pd.DataFrame:
     ]
 
     df = df[cols]
-
-    # Save processed data
+    
     processed_file.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(processed_file, index=False)
+    df.to_parquet(processed_file, index=False)
 
     print(f"Saved {len(df)} cleaned rows to {processed_file}")
 
