@@ -47,10 +47,10 @@ competitive-pricing-etl/
 │   └── transform.py
 │
 ├── data/
-│   ├── raw/
-│   │   └── competitor_pricing.csv
-│   └── processed/
-│       └── sales_clean.csv
+│   ├── processed/
+│   │   └── sales_clean.parquet
+│   └── raw/
+│       └── nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet
 │
 ├── readme.md
 └── requirements.txt
@@ -69,7 +69,7 @@ competitive-pricing-etl/
 ### Extract
 
 - Connects to the Hugging Face dataset API
-- Saves raw data to `data/raw/competitor_pricing.csv`
+- Saves raw data to `data/raw/nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet`
 
 ### Transform
 
@@ -78,7 +78,7 @@ competitive-pricing-etl/
 - Recalculates `price_difference_ngn` and `price_difference_percent` from scratch
 - Adds a `position_rank` column comparing our price vs. competitor price
 - Reorders columns for downstream consistency
-- Saves output to `data/processed/sales_clean.csv`
+- Saves output to `data/processed/sales_clean.parquet`
 
 ### Load
 
