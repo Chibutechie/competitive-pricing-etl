@@ -39,18 +39,27 @@ What started as a simple data ingestion project evolved into a full competitive 
 
 ```
 competitive-pricing-etl/
-│
-├── src/
-│   ├── extract.py
-│   ├── load.py
-│   ├── main.py
-│   └── transform.py
-│
+|
+├── bi_report/
+|       ├──Competetive Pricing Report.jpg
+|       ├──Competitive Pricing Repoort.pbix
+|       └──Competitive Pricing Report.pdf
+|
 ├── data/
 │   ├── processed/
 │   │   └── sales_clean.parquet
 │   └── raw/
 │       └── nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet
+|
+├── image/
+│   ├── architecture_flow.svg
+│   └── architecture_slow.png
+|
+├── src/
+│   ├── extract.py
+│   ├── load.py
+│   ├── main.py
+│   └── transform.py
 │
 ├── readme.md
 └── requirements.txt
