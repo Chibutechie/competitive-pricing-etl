@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 def extract() -> pd.DataFrame:
     """
     Extracts competitor pricing data from a remote parquet dataset,
-    saves it as a CSV file locally, and returns the DataFrame. 
+    saves it as a parquet file locally, and returns the DataFrame. 
     """
 
     # Define raw data path
