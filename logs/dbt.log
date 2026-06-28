@@ -1,0 +1,32 @@
+[0m13:00:02.926986 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002559D85D160>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002559E319310>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002559E9AFED0>]}
+
+
+============================== 13:00:02.935555 | 1edd0ec8-37bd-4634-938c-7125da46e7e2 ==============================
+[0m13:00:02.935555 [info ] [MainThread]: Running with dbt=1.11.6
+[0m13:00:02.936625 [debug] [MainThread]: running dbt with arguments {'use_colors': 'True', 'no_print': 'None', 'cache_selected_only': 'False', 'profiles_dir': 'C:\\Users\\LENOVO\\.dbt', 'target_path': 'None', 'warn_error': 'None', 'static_parser': 'True', 'partial_parse': 'True', 'fail_fast': 'False', 'send_anonymous_usage_stats': 'True', 'log_path': 'logs', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'indirect_selection': 'eager', 'version_check': 'True', 'use_experimental_parser': 'False', 'introspect': 'True', 'quiet': 'False', 'empty': 'None', 'log_cache_events': 'False', 'debug': 'False', 'log_format': 'default', 'invocation_command': 'dbt init pricing_difference', 'printer_width': '80', 'write_json': 'True'}
+[0m13:00:03.036744 [debug] [MainThread]: Starter project path: C:\Users\LENOVO\.projects\competitive-pricing-etl\.venv\Lib\site-packages\dbt\include\starter_project
+[0m13:00:03.110967 [info ] [MainThread]: 
+Your new dbt project "pricing_difference" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m13:00:03.112132 [info ] [MainThread]: Setting up your profile.
+[0m13:00:10.799243 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m13:00:10.799875 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m13:00:10.800349 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m13:02:23.649500 [info ] [MainThread]: Profile pricing_difference written to C:\Users\LENOVO\.dbt\profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m13:02:23.653000 [debug] [MainThread]: Command `dbt init` succeeded at 13:02:23.652598 after 141.19 seconds
+[0m13:02:23.654348 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000255B32A6FD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000255B1983410>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000255B326EF10>]}
+[0m13:02:23.655476 [debug] [MainThread]: Flushing usage events
+[0m13:02:25.657983 [debug] [MainThread]: An error was encountered while trying to flush usage events

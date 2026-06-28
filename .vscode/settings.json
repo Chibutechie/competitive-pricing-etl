@@ -1,0 +1,4 @@
+{
+"python-envs.defaultEnvManager": "ms-python.python:system",
+"dbt.dbtPythonPathOverride": "C:\\Users\\LENOVO\\.projects\\competitive-pricing-etl\\.venv\\Scripts\\python.exe"
+}
