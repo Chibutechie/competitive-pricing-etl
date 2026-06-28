@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: stg_competitor_pricing
+    description: >
+      One row per competitor price comparison, with date parts and pricing
+      comparison attributes pre-computed for reporting.
+    columns:
+      - name: comparison_id
+        description: Primary key for a single price comparison event.
+        tests:
+          - not_null
+          - unique
+      - name: product_name
+        description: Display name of the product being priced.
+        tests:
+          - not_null
+      - name: competitor_name
+        description: Name of the competitor the price was compared against.
+        tests:
+          - not_null
+      - name: our_price
+        description: Our listed price at the time of the check.
+        tests:
+          - not_null
+      - name: competitor_price
+        description: Competitor's listed price at the time of the check.
+        tests:
+          - not_null
+      - name: price_difference
+        description: >
+          competitor_price minus our_price. Confirm the sign convention here
+          matches upstream logic (positive should mean we're cheaper).
+      - name: percent_difference
+        description: price_difference expressed as a percentage of competitor_price.
+      - name: price_position
+        description: Classification of our price relative to the competitor's.
+        tests:
+          - accepted_values:
+              values: ["Cheaper", "Expensive", "Matched"]
+      - name: available_competitor
+        description: Whether the competitor had the product in stock at check time.
+      - name: date_checked
+        description: Date the price comparison was captured.
+        tests:
+          - not_null
+      - name: year
+        description: Year extracted from date_checked.
+      - name: month_num
+        description: Numeric month (1-12) extracted from date_checked.
+      - name: month_name
+        description: Full month name extracted from date_checked.
+      - name: week_number
+        description: ISO week number extracted from date_checked.
+      - name: weekdays
+        description: Day-of-week name extracted from date_checked.
+      - name: is_weekend
+        description: Whether date_checked fell on a Saturday or Sunday.
+      - name: loaded_at
+        description: Timestamp this row was loaded into the warehouse.
+        tests:
+          - not_null

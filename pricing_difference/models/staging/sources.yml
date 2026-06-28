@@ -1,22 +1,23 @@
-version: 2
-
-sources:
-  - name: pricing_difference
-    database: PRICING_DIFF
-    schema: raw
-    config:
-      freshness:
-        warn_after:
-          count: 24
-          period: hour
-        error_after:
-          count: 48
-          period: hour
-
-    tables:
-      - name: competitor_pricing
-        columns:
-          - name: comparison_id
-            data_tests:
-              - unique
-              - not_null
+tables:
+  - name: competitor_pricing
+    columns:
+      - name: comparison_id
+        data_tests:
+          - unique
+          - not_null
+      - name: product_name
+        data_tests:
+          - not_null
+      - name: date_checked
+        data_tests:
+          - not_null
+      - name: competitor_price
+        data_tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: our_price
+        data_tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
