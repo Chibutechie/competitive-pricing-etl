@@ -1,0 +1,343 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1200 900" width="1200" height="900"
+     font-family="Inter, system-ui, -apple-system, sans-serif">
+
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0f1e"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+
+    <!-- Title gradient -->
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+
+    <!-- dbt gradient -->
+    <linearGradient id="dbtGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#ff9f5a"/>
+    </linearGradient>
+
+    <!-- Snowflake gradient -->
+    <linearGradient id="snowflakeGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#29b6f6"/>
+      <stop offset="100%" stop-color="#01baef"/>
+    </linearGradient>
+
+    <!-- Subtle card gradient -->
+    <linearGradient id="cardBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(30,41,59,0.95)"/>
+      <stop offset="100%" stop-color="rgba(15,23,42,0.95)"/>
+    </linearGradient>
+
+    <!-- Arrowhead – grey (default) -->
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+    </marker>
+
+    <!-- Arrowhead – blue (Snowflake) -->
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#29b6f6"/>
+    </marker>
+
+    <!-- Arrowhead – dbt orange -->
+    <marker id="arrow-dbt" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ff6b35"/>
+    </marker>
+
+    <!-- Drop-shadow for cards -->
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.55"/>
+    </filter>
+
+    <!-- Soft glow for particles -->
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Stronger glow for main flow -->
+    <filter id="glowStrong" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- ════════════════════════════════════════
+       BACKGROUND
+  ════════════════════════════════════════ -->
+  <rect width="1200" height="900" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g opacity="0.04" stroke="#94a3b8" stroke-width="1">
+    <line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="330" x2="1200" y2="330"/>
+    <line x1="0" y1="530" x2="1200" y2="530"/>
+    <line x1="0" y1="730" x2="1200" y2="730"/>
+    <line x1="240" y1="80" x2="240" y2="900"/>
+    <line x1="600" y1="80" x2="600" y2="900"/>
+    <line x1="960" y1="80" x2="960" y2="900"/>
+  </g>
+
+  <!-- ════════════════════════════════════════
+       TITLES
+  ════════════════════════════════════════ -->
+  <text x="600" y="44" text-anchor="middle" font-size="26" font-weight="700" fill="url(#titleGrad)">
+    Competitive Pricing dbt + Snowflake Pipeline
+  </text>
+  <text x="600" y="68" text-anchor="middle" font-size="13" fill="#64748b">
+    Snowflake Raw Data  ›  dbt Staging  ›  Dimensional Models  ›  Snapshots  ›  Power BI
+  </text>
+
+  <!-- Column header pills -->
+  <rect x="20"   y="85" width="200" height="24" rx="12" fill="rgba(29,185,246,0.1)"  stroke="rgba(29,185,246,0.3)"  stroke-width="1"/>
+  <text x="120"  y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#29b6f6">SOURCES</text>
+
+  <rect x="280"  y="85" width="240" height="24" rx="12" fill="rgba(255,107,53,0.1)"  stroke="rgba(255,107,53,0.3)"  stroke-width="1"/>
+  <text x="400"  y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#ff6b35">dbt TRANSFORMATION</text>
+
+  <rect x="620"  y="85" width="240" height="24" rx="12" fill="rgba(255,107,53,0.1)"  stroke="rgba(255,107,53,0.3)"  stroke-width="1"/>
+  <text x="740"  y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#ff6b35">dbt MODELS</text>
+
+  <rect x="960"  y="85" width="200" height="24" rx="12" fill="rgba(234,179,8,0.1)" stroke="rgba(234,179,8,0.3)" stroke-width="1"/>
+  <text x="1060" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#eab308">ANALYTICS</text>
+
+  <!-- ════════════════════════════════════════
+       COLUMN 1: SNOWFLAKE SOURCES (x=120)
+  ════════════════════════════════════════ -->
+
+  <!-- Snowflake Logo Container -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="135" width="200" height="60" rx="12" fill="url(#cardBg)" stroke="rgba(41,182,246,0.3)" stroke-width="1.5"/>
+    <rect x="20" y="135" width="200" height="4" rx="2" fill="#29b6f6"/>
+  </g>
+  <text x="120" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#29b6f6">❄️  Snowflake</text>
+  <text x="120" y="179" text-anchor="middle" font-size="11" fill="#64748b">Raw Data Warehouse</text>
+
+  <!-- Source Table -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="215" width="200" height="68" rx="12" fill="url(#cardBg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <rect x="20" y="215" width="200" height="4" rx="2" fill="#38bdf8"/>
+  </g>
+  <text x="120" y="242" text-anchor="middle" font-size="12" font-weight="700" fill="#38bdf8">COMPETITOR_PRICING</text>
+  <text x="120" y="261" text-anchor="middle" font-size="11" fill="#64748b">Raw Source Table</text>
+
+  <!-- ════════════════════════════════════════
+       COLUMN 2: dbt STAGING (x=400)
+  ════════════════════════════════════════ -->
+
+  <!-- dbt logo -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="135" width="240" height="60" rx="12" fill="url(#cardBg)" stroke="rgba(255,107,53,0.3)" stroke-width="1.5"/>
+    <rect x="280" y="135" width="240" height="4" rx="2" fill="url(#dbtGrad)"/>
+  </g>
+  <text x="400" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#ff6b35">🏗️  dbt Transformation</text>
+  <text x="400" y="179" text-anchor="middle" font-size="11" fill="#64748b">Version Control & Tests</text>
+
+  <!-- Staging Model -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="215" width="240" height="68" rx="12" fill="url(#cardBg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <rect x="280" y="215" width="240" height="4" rx="2" fill="#a78bfa"/>
+  </g>
+  <text x="400" y="242" text-anchor="middle" font-size="12" font-weight="700" fill="#a78bfa">stg_competitor_pricing</text>
+  <text x="400" y="261" text-anchor="middle" font-size="11" fill="#64748b">Cleaned & Typed Data</text>
+
+  <!-- ════════════════════════════════════════
+       COLUMN 3: dbt DIMENSIONS & FACTS (x=740)
+  ════════════════════════════════════════ -->
+
+  <!-- Dimensions Header -->
+  <text x="740" y="145" text-anchor="middle" font-size="13" font-weight="700" fill="#ff6b35">Dimensions</text>
+
+  <!-- dim_product -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="165" width="110" height="60" rx="12" fill="url(#cardBg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <rect x="620" y="165" width="110" height="4" rx="2" fill="#f59e0b"/>
+  </g>
+  <text x="675" y="189" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b">dim_product</text>
+  <text x="675" y="207" text-anchor="middle" font-size="10" fill="#64748b">Products</text>
+
+  <!-- dim_competitor -->
+  <g filter="url(#shadow)">
+    <rect x="750" y="165" width="110" height="60" rx="12" fill="url(#cardBg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <rect x="750" y="165" width="110" height="4" rx="2" fill="#22d3ee"/>
+  </g>
+  <text x="805" y="189" text-anchor="middle" font-size="11" font-weight="700" fill="#22d3ee">dim_competitor</text>
+  <text x="805" y="207" text-anchor="middle" font-size="10" fill="#64748b">Competitors</text>
+
+  <!-- dim_date -->
+  <g filter="url(#shadow)">
+    <rect x="880" y="165" width="110" height="60" rx="12" fill="url(#cardBg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <rect x="880" y="165" width="110" height="4" rx="2" fill="#ec4899"/>
+  </g>
+  <text x="935" y="189" text-anchor="middle" font-size="11" font-weight="700" fill="#ec4899">dim_date</text>
+  <text x="935" y="207" text-anchor="middle" font-size="10" fill="#64748b">Calendar</text>
+
+  <!-- Fact Table -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="245" width="370" height="68" rx="12" fill="url(#cardBg)" stroke="rgba(59,130,246,0.3)" stroke-width="1.5"/>
+    <rect x="620" y="245" width="370" height="4" rx="2" fill="#3b82f6"/>
+  </g>
+  <text x="805" y="272" text-anchor="middle" font-size="13" font-weight="700" fill="#3b82f6">⭐  fct_competitor_pricing</text>
+  <text x="805" y="291" text-anchor="middle" font-size="11" fill="#64748b">Star Schema Fact Table</text>
+
+  <!-- Snapshot -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="333" width="370" height="68" rx="12" fill="url(#cardBg)" stroke="rgba(34,197,94,0.3)" stroke-width="1.5"/>
+    <rect x="620" y="333" width="370" height="4" rx="2" fill="#22c55e"/>
+  </g>
+  <text x="805" y="360" text-anchor="middle" font-size="13" font-weight="700" fill="#22c55e">📸  snap_competitor_pricing</text>
+  <text x="805" y="379" text-anchor="middle" font-size="11" fill="#64748b">SCD Type 2 Historical Data</text>
+
+  <!-- Data Tests -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="421" width="370" height="60" rx="12" fill="url(#cardBg)" stroke="rgba(168,85,247,0.3)" stroke-width="1"/>
+    <rect x="620" y="421" width="370" height="4" rx="2" fill="#a855f7"/>
+  </g>
+  <text x="805" y="445" text-anchor="middle" font-size="12" font-weight="700" fill="#a855f7">✅  dbt Tests</text>
+  <text x="805" y="463" text-anchor="middle" font-size="10" fill="#64748b">Data Quality Validation</text>
+
+  <!-- ════════════════════════════════════════
+       COLUMN 4: POWER BI (x=1060)
+  ════════════════════════════════════════ -->
+
+  <!-- Power BI -->
+  <g filter="url(#shadow)">
+    <rect x="960" y="165" width="200" height="316" rx="12" fill="url(#cardBg)" stroke="rgba(234,179,8,0.35)" stroke-width="1.5"/>
+    <rect x="960" y="165" width="200" height="4" rx="2" fill="#eab308"/>
+  </g>
+  <text x="1060" y="220" text-anchor="middle" font-size="14" font-weight="700" fill="#eab308">📊  Power BI</text>
+  <text x="1060" y="241" text-anchor="middle" font-size="11" fill="#64748b">Competitive</text>
+  <text x="1060" y="256" text-anchor="middle" font-size="11" fill="#64748b">Pricing Dashboard</text>
+
+  <g opacity="0.3">
+    <line x1="975" y1="275" x2="1145" y2="275" stroke="#64748b" stroke-width="1"/>
+  </g>
+
+  <text x="1060" y="305" text-anchor="middle" font-size="10" font-weight="500" fill="#94a3b8">✨ Real-time Analytics</text>
+  <text x="1060" y="320" text-anchor="middle" font-size="10" font-weight="500" fill="#94a3b8">✨ Price Trends</text>
+  <text x="1060" y="335" text-anchor="middle" font-size="10" font-weight="500" fill="#94a3b8">✨ Market Position</text>
+  <text x="1060" y="350" text-anchor="middle" font-size="10" font-weight="500" fill="#94a3b8">✨ Historical Data</text>
+
+  <!-- ════════════════════════════════════════
+       STAGE BADGES (bottom left)
+  ════════════════════════════════════════ -->
+
+  <rect x="20" y="630" width="1160" height="240" rx="14" fill="rgba(59,130,246,0.05)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+
+  <text x="30" y="655" font-size="13" font-weight="700" fill="#60a5fa">Star Schema Structure</text>
+
+  <!-- Schema diagram text -->
+  <text x="50" y="685" font-size="11" font-weight="600" fill="#93c5fd">Dimensions:</text>
+  <text x="50" y="703" font-size="10" fill="#cbd5e1">• dim_product (product_key, product_name)</text>
+  <text x="50" y="720" font-size="10" fill="#cbd5e1">• dim_competitor (competitor_key, competitor_name)</text>
+  <text x="50" y="737" font-size="10" fill="#cbd5e1">• dim_date (date_day, month_num, year, is_weekend...)</text>
+
+  <text x="500" y="685" font-size="11" font-weight="600" fill="#93c5fd">Facts:</text>
+  <text x="500" y="703" font-size="10" fill="#cbd5e1">• fct_competitor_pricing (pricing_id, product_key, competitor_key, date_day,</text>
+  <text x="500" y="720" font-size="10" fill="#cbd5e1">  our_price, competitor_price, price_difference, percent_difference...)</text>
+
+  <text x="50" y="760" font-size="11" font-weight="600" fill="#93c5fd">Historical Tracking:</text>
+  <text x="50" y="777" font-size="10" fill="#cbd5e1">• snap_competitor_pricing (SCD Type 2 with dbt_valid_from, dbt_valid_to)</text>
+  <text x="50" y="794" font-size="10" fill="#cbd5e1">• Tracks every price change over time for competitive intelligence</text>
+
+  <text x="500" y="815" font-size="11" font-weight="600" fill="#93c5fd">Data Quality:</text>
+  <text x="500" y="832" font-size="10" fill="#cbd5e1">• Unique tests on comparison_id and product_key</text>
+  <text x="500" y="849" font-size="10" fill="#cbd5e1">• Not-null tests on critical columns  •  Expression tests (price > 0)</text>
+
+  <!-- ════════════════════════════════════════
+       CONNECTOR PATHS — dbt workflow
+  ════════════════════════════════════════ -->
+
+  <!-- Source → Staging (Snowflake to stg) -->
+  <path id="source-to-stg" fill="none" stroke="#29b6f6" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrow-blue)"
+        d="M 220 249 L 280 249">
+    <animate attributeName="stroke-dashoffset" from="0" to="-130" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Staging → Dimensions (stg to dims) -->
+  <path id="stg-to-dims" fill="none" stroke="#ff6b35" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrow-dbt)"
+        d="M 520 249 L 620 195">
+    <animate attributeName="stroke-dashoffset" from="0" to="-130" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Staging → Facts (stg to facts) -->
+  <path id="stg-to-facts" fill="none" stroke="#ff6b35" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrow-dbt)"
+        d="M 520 249 L 620 279">
+    <animate attributeName="stroke-dashoffset" from="0" to="-130" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Facts → Snapshots (horizontal) -->
+  <path id="facts-to-snap" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrow)"
+        d="M 805 313 L 805 333">
+    <animate attributeName="stroke-dashoffset" from="0" to="-130" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Facts → Power BI (main output) -->
+  <path id="facts-to-pbi" fill="none" stroke="#eab308" stroke-width="2.5" stroke-dasharray="10 5" marker-end="url(#arrow)"
+        d="M 990 279 L 960 279">
+    <animate attributeName="stroke-dashoffset" from="0" to="-150" dur="1.8s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Snapshots → Power BI (historical data) -->
+  <path id="snap-to-pbi" fill="none" stroke="#eab308" stroke-width="2.5" stroke-dasharray="10 5" marker-end="url(#arrow)"
+        d="M 990 367 L 960 367">
+    <animate attributeName="stroke-dashoffset" from="0" to="-150" dur="1.8s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- ════════════════════════════════════════
+       ANIMATED PARTICLES
+  ════════════════════════════════════════ -->
+
+  <!-- Source → Staging (blue) -->
+  <circle r="4" fill="#29b6f6" filter="url(#glow)">
+    <animateMotion dur="2s" begin="0s" repeatCount="indefinite"><mpath xlink:href="#source-to-stg"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#29b6f6" filter="url(#glow)">
+    <animateMotion dur="2s" begin="1s" repeatCount="indefinite"><mpath xlink:href="#source-to-stg"/></animateMotion>
+  </circle>
+
+  <!-- Staging → Dimensions (orange) -->
+  <circle r="4" fill="#ff6b35" filter="url(#glow)">
+    <animateMotion dur="2s" begin="0.3s" repeatCount="indefinite"><mpath xlink:href="#stg-to-dims"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#ff6b35" filter="url(#glow)">
+    <animateMotion dur="2s" begin="1.3s" repeatCount="indefinite"><mpath xlink:href="#stg-to-dims"/></animateMotion>
+  </circle>
+
+  <!-- Staging → Facts (orange) -->
+  <circle r="4" fill="#ff6b35" filter="url(#glow)">
+    <animateMotion dur="2s" begin="0.5s" repeatCount="indefinite"><mpath xlink:href="#stg-to-facts"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#ff6b35" filter="url(#glow)">
+    <animateMotion dur="2s" begin="1.5s" repeatCount="indefinite"><mpath xlink:href="#stg-to-facts"/></animateMotion>
+  </circle>
+
+  <!-- Facts → Snapshots (green) -->
+  <circle r="4" fill="#22c55e" filter="url(#glow)">
+    <animateMotion dur="1.8s" begin="0.8s" repeatCount="indefinite"><mpath xlink:href="#facts-to-snap"/></animateMotion>
+  </circle>
+  <circle r="4" fill="#22c55e" filter="url(#glow)">
+    <animateMotion dur="1.8s" begin="1.7s" repeatCount="indefinite"><mpath xlink:href="#facts-to-snap"/></animateMotion>
+  </circle>
+
+  <!-- Facts → Power BI (large yellow/blue) -->
+  <circle r="5.5" fill="#eab308" filter="url(#glowStrong)">
+    <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath xlink:href="#facts-to-pbi"/></animateMotion>
+  </circle>
+  <circle r="5.5" fill="#3b82f6" filter="url(#glowStrong)">
+    <animateMotion dur="1.5s" begin="0.75s" repeatCount="indefinite"><mpath xlink:href="#facts-to-pbi"/></animateMotion>
+  </circle>
+
+  <!-- Snapshots → Power BI (large yellow/green) -->
+  <circle r="5.5" fill="#eab308" filter="url(#glowStrong)">
+    <animateMotion dur="1.5s" begin="0.2s" repeatCount="indefinite"><mpath xlink:href="#snap-to-pbi"/></animateMotion>
+  </circle>
+  <circle r="5.5" fill="#22c55e" filter="url(#glowStrong)">
+    <animateMotion dur="1.5s" begin="0.95s" repeatCount="indefinite"><mpath xlink:href="#snap-to-pbi"/></animateMotion>
+  </circle>
+
+</svg>

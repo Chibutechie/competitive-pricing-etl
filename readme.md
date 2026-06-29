@@ -1,6 +1,6 @@
 # Competitive Pricing Intelligence ETL Pipeline
 
-> An end-to-end data pipeline that extracts Nigerian retail competitor pricing data, transforms it for competitive analysis, and loads it into PostgreSQL — with a Power BI dashboard for business intelligence reporting.
+> An end-to-end dbt-powered data pipeline that extracts Nigerian retail competitor pricing data, transforms it into a dimensional star schema in Snowflake, and enables competitive market analysis with historical tracking via snapshots.
 
 ---
 
@@ -10,89 +10,199 @@
 - [Project Objective](#project-objective)
 - [Project Structure](#project-structure)
 - [Architecture Flow](#architecture-flow)
+- [Data Model](#data-model)
 - [How It Works](#how-it-works)
 - [Dataset Schema](#dataset-schema)
 - [Technologies](#technologies)
 - [Setup Instructions](#setup-instructions)
+- [dbt Commands](#dbt-commands)
 - [Dashboard](#dashboard)
 
 ---
 
 ## Overview
 
-This pipeline extracts, cleans, and loads data from the [Hugging Face Nigerian Retail & E-commerce Competitor Pricing Dataset](https://huggingface.co/datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/viewer) into a PostgreSQL database for competitive market analysis.
+This pipeline extracts, transforms, and loads competitor pricing data from the [Hugging Face Nigerian Retail & E-commerce Competitor Pricing Dataset](https://huggingface.co/datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/viewer) into Snowflake using dbt for orchestration and transformation.
 
-What started as a simple data ingestion project evolved into a full competitive intelligence solution. The core question shifted from _"How is the business performing?"_ to _"How are we positioned in the market?"_; which drove the creation of derived metrics and a full BI report.
+The core architecture has evolved from a Python-based ETL to a dbt-centric approach with a dimensional star schema, enabling sophisticated competitive intelligence analysis and historical data tracking.
 
 ---
 
 ## Project Objective
 
-- Extract competitor pricing data via the Hugging Face API
-- Validate data and recalculate pricing metrics from source
-- Load processed tables into PostgreSQL
-- Build a business intelligence dashboard in Power BI
+- Extract competitor pricing data from source systems
+- Build a scalable, version-controlled transformation layer with dbt
+- Create a dimensional star schema for efficient querying
+- Implement data quality tests
+- Track pricing changes over time using dbt snapshots
+- Enable competitive market positioning analysis
 
 ---
 
 ## Project Structure
 
 ```
-competitive-pricing-etl/
-|
-├── bi_report/
-|       ├──Competetive Pricing Report.jpg
-|       ├──Competitive Pricing Repoort.pbix
-|       └──Competitive Pricing Report.pdf
-|
-├── data/
-│   ├── processed/
-│   │   └── sales_clean.parquet
-│   └── raw/
-│       └── nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet
-|
-├── image/
-│   ├── architecture_flow.svg
-│   └── architecture_slow.png
-|
-├── src/
-│   ├── extract.py
-│   ├── load.py
-│   ├── main.py
-│   └── transform.py
+pricing_difference/
 │
-├── readme.md
-└── requirements.txt
+├── models/
+│   ├── staging/
+│   │   ├── stg_competitor_pricing.sql        # Staging model with cleaning & type casting
+│   │   └── sources.yml                        # Source definitions & freshness checks
+│   │
+│   └── marts/
+│       ├── dim_product.sql                    # Product dimension
+│       ├── dim_competitor.sql                 # Competitor dimension
+│       ├── dim_date.sql                       # Date dimension (calendar table)
+│       └── fct_competitor_pricing.sql         # Fact table (denormalized joined data)
+│
+├── snapshots/
+│   └── snap_competitor_pricing.sql            # Snapshot for historical price tracking
+│
+├── tests/
+│   └── data_tests/                            # dbt data tests (unique, not_null, etc)
+│
+├── dbt_project.yml                            # dbt project configuration
+├── profiles.yml                               # Snowflake connection settings
+├── sources.yml                                # Source definitions with tests
+└── README.md
+
 ```
 
 ---
 
 ## Architecture Flow
 
-![Architecture Flow](image/architecture_flow.svg)
+```
+Raw Data (Snowflake)
+        ↓
+    [sources.yml]
+        ↓
+[stg_competitor_pricing] ← Staging Layer (cleaning, casting)
+        ↓
+    ┌───┴──────────┬─────────────┐
+    ↓              ↓              ↓
+[dim_product] [dim_competitor] [dim_date] ← Dimensions
+    ↓              ↓              ↓
+    └───────┬──────┴──────────────┘
+            ↓
+[fct_competitor_pricing] ← Fact Table (Star Schema)
+            ↓
+[snap_competitor_pricing] ← Historical Snapshot (SCD Type 2)
+            ↓
+Power BI / Analytics Tools
+```
+
+---
+
+## Data Model
+
+### Star Schema Structure
+
+#### **Dimensions**
+
+**dim_product**
+
+- `product_key` (PK)
+- `product_name`
+- `dbt_created_at`, `dbt_updated_at`
+
+**dim_competitor**
+
+- `competitor_key` (PK)
+- `competitor_name`
+- `dbt_created_at`, `dbt_updated_at`
+
+**dim_date**
+
+- `date_day` (PK)
+- `day_of_week`, `day_of_week_num`, `day_of_month`
+- `week_number`, `month_num`, `month_name`, `quarter`, `year_num`
+- `is_weekend`, `season`
+- `year_month` (for aggregations)
+- `dbt_created_at`, `dbt_updated_at`
+
+#### **Facts**
+
+**fct_competitor_pricing**
+
+- `pricing_id` (PK - surrogate key)
+- `product_key` (FK → dim_product)
+- `competitor_key` (FK → dim_competitor)
+- `date_day` (FK → dim_date)
+- `our_price`, `competitor_price`
+- `price_difference`, `percent_difference`
+- `price_position`
+- `is_available`
+- `loaded_at`
+
+#### **Snapshots**
+
+**snap_competitor_pricing** (Type 2 SCD)
+
+- Original columns from staging
+- `dbt_scd_id` (unique surrogate key)
+- `dbt_valid_from` (when row became valid)
+- `dbt_valid_to` (when row became invalid, NULL if current)
+- `dbt_is_deleted` (tracks deleted records)
 
 ---
 
 ## How It Works
 
-### Extract
+### 1. **Source Definition** (`sources.yml`)
 
-- Connects to the Hugging Face dataset API
-- Saves raw data to `data/raw/nigerian_retail_and_ecommerce_competitor_pricing_datasets.parquet`
+```yaml
+sources:
+  - name: pricing_difference
+    database: PRICING_DIFF
+    schema: raw
+    config:
+      freshness:
+        warn_after: { count: 24, period: hour }
+        error_after: { count: 48, period: hour }
+    tables:
+      - name: competitor_pricing
+        data_tests:
+          - unique: [comparison_id]
+          - not_null: [comparison_id]
+```
 
-### Transform
+### 2. **Staging** (`stg_competitor_pricing.sql`)
 
-- Drops null rows and normalizes column headers
-- Removes source `price_difference_ngn` and `price_difference_percent` columns
-- Recalculates `price_difference_ngn` and `price_difference_percent` from scratch
-- Adds a `position_rank` column comparing our price vs. competitor price
-- Reorders columns for downstream consistency
-- Saves output to `data/processed/sales_clean.parquet`
+- Pulls from source tables
+- Normalizes data types (VARCHAR, NUMBER, DATE, TIMESTAMP_NTZ, BOOLEAN)
+- Removes nulls and duplicates
+- Casts columns for downstream consistency
+- Creates a clean, conformed dataset
 
-### Load
+### 3. **Dimensions** (`dim_*.sql`)
 
-- Connects to PostgreSQL using environment variables
-- Loads the cleaned data into the `competitor_pricing` database
+- **dim_product**: Unique products with row numbering
+- **dim_competitor**: Unique competitors
+- **dim_date**: Calendar table (2024 full year with enriched date attributes)
+
+All dimensions include `dbt_created_at` and `dbt_updated_at` for audit trail.
+
+### 4. **Fact Table** (`fct_competitor_pricing.sql`)
+
+- Joins staging data with all three dimensions via left joins
+- Creates surrogate key using `dbt_utils.surrogate_key()`
+- Stores denormalized facts for efficient querying
+- Materialized as a table for performance
+
+### 5. **Snapshots** (`snap_competitor_pricing.sql`)
+
+- Uses `strategy: timestamp` with `updated_at: loaded_at`
+- Tracks every price change and records when it occurred
+- Enables historical analysis: _"What was the competitor's price on X date?"_
+- Implements Slowly Changing Dimension (SCD) Type 2
+
+### 6. **Data Tests**
+
+- Uniqueness tests on comparison_id and product_key
+- Not-null tests on critical columns
+- Custom expression tests (price > 0, valid date ranges)
+- All tests run with `dbt test`
 
 ---
 
@@ -100,29 +210,33 @@ competitive-pricing-etl/
 
 Source: [Hugging Face Dataset](https://huggingface.co/datasets/electricsheepafrica/nigerian_retail_and_ecommerce_competitor_pricing_datasets/viewer)
 
-| Field                      | Type    | Example       |
-| -------------------------- | ------- | ------------- |
-| `comparison_id`            | String  | `COMP0000000` |
-| `product_id`               | String  | `PRD80182`    |
-| `product_name`             | String  | `Option`      |
-| `our_price_ngn`            | Float   | `298984.47`   |
-| `competitor_name`          | String  | `Spar`        |
-| `competitor_price_ngn`     | Float   | `333817.21`   |
-| `price_difference_ngn`     | Float   | `-45159.28`   |
-| `price_difference_percent` | Float   | `8.85`        |
-| `date_checked`             | String  | `2024-08-06`  |
-| `in_stock_competitor`      | Boolean | `False`       |
+| Column                  | Type          | Loaded via |
+| ----------------------- | ------------- | ---------- |
+| comparison_id           | VARCHAR       | Source     |
+| product_name            | VARCHAR       | Source     |
+| competitor_name         | VARCHAR       | Source     |
+| our_price               | NUMBER(10,2)  | Staging    |
+| competitor_price        | NUMBER(10,2)  | Staging    |
+| price_difference        | NUMBER(10,2)  | Staging    |
+| percent_difference      | FLOAT         | Staging    |
+| price_position          | VARCHAR       | Source     |
+| date_checked            | DATE          | Staging    |
+| is_available_competitor | BOOLEAN       | Source     |
+| loaded_at               | TIMESTAMP_NTZ | Source     |
 
 ---
 
 ## Technologies
 
-| Tool                                                                                  | Purpose                                        |
-| ------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [Python](https://www.python.org/)                                                     | Pipeline scripting (extract, transform, load)  |
-| [PostgreSQL](https://www.postgresql.org/)                                             | Relational database for storing processed data |
-| [Power BI](https://learn.microsoft.com/en-us/power-bi/fundamentals/power-bi-overview) | Business intelligence dashboard                |
-| [VS Code](https://code.visualstudio.com/)                                             | Development environment                        |
+| Tool                                                                                    | Purpose                             |
+| --------------------------------------------------------------------------------------- | ----------------------------------- |
+| [dbt](https://www.getdbt.com/)                                                          | Data transformation & orchestration |
+| [Snowflake](https://www.snowflake.com/)                                                 | Cloud data warehouse                |
+| [Snowflake Adapter](https://docs.getdbt.com/reference/warehouse-setups/snowflake-setup) | dbt ↔ Snowflake integration         |
+| [dbt Power User](https://www.getdbt.com/product/ide/)                                   | VS Code IDE for dbt                 |
+| [Power BI](https://learn.microsoft.com/en-us/power-bi/)                                 | Business intelligence dashboard     |
+| [VS Code](https://code.visualstudio.com/)                                               | Development environment             |
+| [Python 3.13](https://www.python.org/)                                                  | dbt runtime & macro support         |
 
 ---
 
@@ -132,71 +246,303 @@ Source: [Hugging Face Dataset](https://huggingface.co/datasets/electricsheepafri
 
 ```bash
 git clone https://github.com/Chibutechie/competitive-pricing-etl.git
-cd competitive-pricing-etl
+cd competitive-pricing-etl/pricing_difference
 ```
 
 ### 2. Create a Virtual Environment
 
 ```bash
-python -m venv myenv
-source myenv/bin/activate        # macOS/Linux
-myenv\Scripts\activate           # Windows
+python -m venv .venv
+source .venv/bin/activate        # macOS/Linux
+.venv\Scripts\activate           # Windows
 ```
 
-### 3. Install Dependencies
+### 3. Install dbt & Snowflake Adapter
 
 ```bash
-pip install -r requirements.txt
+pip install dbt-snowflake
+pip install dbt-utils
 ```
 
-### 4. Configure Environment Variables
+### 4. Configure Snowflake Connection
 
-Create a `.env` file in the project root:
+Create `profiles.yml` in `~/.dbt/`:
+
+```yaml
+pricing_difference:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: [your-account-id]
+      user: [your-username]
+      password: [your-password]
+      role: [your-role]
+      database: PRICING_DIFF
+      schema: dev
+      threads: 1
+      client_session_keep_alive: False
+```
+
+### 5. Test Connection
 
 ```bash
-touch .env
+dbt debug
 ```
 
-Add your database credentials:
+Expected output:
 
-```env
-DB_USER=your_username
-DB_PASSWORD=your_password
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=database_name
+```
+Connection test: [OK Connection ok]
 ```
 
-### 5. Run the Pipeline
+### 6. Load Data into Snowflake
 
-```python
-from src.extract import extract
-from src.transform import transform
-from src.load import load
-
-extract()
-transform()
-load()
+```sql
+-- Load your raw data into PRICING_DIFF.RAW.COMPETITOR_PRICING
+-- You can use Snowflake's COPY command, Python connector, or UI
 ```
 
-Then verify that data has been loaded into your PostgreSQL database.
+---
+
+## dbt Commands
+
+### Parse Project
+
+```bash
+dbt parse
+```
+
+### Run Transformations
+
+```bash
+# Run all models
+dbt run
+
+# Run specific model
+dbt run --select stg_competitor_pricing
+
+# Run model and its downstream dependents
+dbt run --select +dim_product+
+```
+
+### Run Data Tests
+
+```bash
+# Run all tests
+dbt test
+
+# Run tests on specific model
+dbt test --select stg_competitor_pricing
+
+# Fail fast on first error
+dbt test --fail-fast
+```
+
+### Create Snapshots
+
+```bash
+# Run all snapshots
+dbt snapshot
+
+# Run specific snapshot
+dbt snapshot --select snap_competitor_pricing
+```
+
+### Generate Documentation
+
+```bash
+dbt docs generate
+dbt docs serve
+```
+
+Opens interactive documentation at `localhost:8000`
+
+### Clean Up
+
+```bash
+# Remove target/ and dbt_packages/
+dbt clean
+
+# Full refresh (drop and recreate tables)
+dbt run --full-refresh
+```
+
+### Partial Parse (Recommended)
+
+```bash
+# Faster local development - only parses changed files
+dbt --no-partial-parse run
+```
+
+---
+
+## Project Configuration
+
+### `dbt_project.yml`
+
+```yaml
+name: "pricing_difference"
+version: "1.0.0"
+profile: "pricing_difference"
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+snapshot-paths: ["snapshots"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+
+models:
+  pricing_difference:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts
+```
+
+### Materialization Strategy
+
+- **Staging**: Views (lightweight, can be queried directly)
+- **Dimensions**: Tables (small, frequently joined)
+- **Facts**: Tables (larger, aggregation target)
+- **Snapshots**: Tables (immutable historical records)
+
+---
+
+## Data Quality Tests
+
+### Built-in Tests
+
+```yaml
+# In sources.yml or model blocks
+tests:
+  - unique: [comparison_id]
+  - not_null: [comparison_id, product_name]
+  - dbt_expectations.expect_table_row_count_to_be_between:
+      min_value: 1000
+      max_value: 1000000
+```
+
+### Custom SQL Tests
+
+Create in `tests/`:
+
+```sql
+select count(*) as unexpected_records
+from {{ ref('fct_competitor_pricing') }}
+where competitor_price <= 0
+having count(*) > 0
+```
+
+### Run Tests
+
+```bash
+dbt test --fail-fast
+```
+
+---
+
+## Snapshot Strategy
+
+### Why Snapshots?
+
+- **Track pricing changes** over time (e.g., competitor price drops)
+- **Answer historical questions**: _"What was the price on Aug 15?"_
+- **Identify trends**: _"Which competitors consistently undercut us?"_
+- **Audit trail**: See when data changed and why
+
+### How to Query Snapshots
+
+```sql
+-- Get current prices
+select * from snap_competitor_pricing
+where dbt_valid_to is null;
+
+-- Get price on specific date
+select * from snap_competitor_pricing
+where date_checked <= '2024-08-15'
+  and (dbt_valid_to >= '2024-08-15' or dbt_valid_to is null);
+
+-- Track price changes for one competitor
+select
+    comparison_id,
+    competitor_price,
+    dbt_valid_from,
+    dbt_valid_to
+from snap_competitor_pricing
+where competitor_name = 'Amazon'
+order by dbt_valid_from;
+```
 
 ---
 
 ## Dashboard
 
-[![Dashboard](bi_report/Competitive%20Pricing%20Report.jpg)](bi_report/Competitive%20Pricing%20Report.jpg)
+The Power BI dashboard connects directly to Snowflake and visualizes:
 
-The Power BI dashboard connects directly to PostgreSQL and visualizes competitive pricing positions across products and competitors.
+- **Competitive positioning** by product and competitor
+- **Price trends** over time
+- **Market share analysis** based on pricing
+- **Availability tracking** for competitors
+- **Historical price changes** from snapshots
 
-### Setup Steps
+### Power BI Setup
 
-1. Open Power BI Desktop and create a blank report
-2. Click **Get Data → Database → PostgreSQL database**
-3. Connect using your server credentials
-4. Load the data into Power Query Editor for any final type normalization
-5. Click **Close & Apply**
-6. Create a date table for time-based analysis
-7. Build your report visuals
+1. Open Power BI Desktop → **Get Data** → **Snowflake**
+2. Enter your Snowflake account, username, password
+3. Select `PRICING_DIFF` database and `MARTS` schema
+4. Import `dim_product`, `dim_competitor`, `dim_date`, `fct_competitor_pricing`
+5. Create relationships:
+   - `fct_competitor_pricing.product_key` → `dim_product.product_key`
+   - `fct_competitor_pricing.competitor_key` → `dim_competitor.competitor_key`
+   - `fct_competitor_pricing.date_day` → `dim_date.date_day`
+6. Build visualizations using the star schema
 
-> For more on connecting Power BI to PostgreSQL, see the [Microsoft documentation](https://learn.microsoft.com/en-us/power-bi/connect-data/).
+---
+
+## Deployment
+
+### Development → Production
+
+```bash
+# Develop & test locally
+dbt run --select stg_competitor_pricing
+dbt test
+
+# Push to Git (version control)
+git add .
+git commit -m "Add dim_date dimension"
+git push origin main
+
+# Deploy to production environment
+dbt run --target prod --select state:modified+
+```
+
+### Production Profile (in `profiles.yml`)
+
+```yaml
+outputs:
+  prod:
+    type: snowflake
+    account: [prod-account]
+    user: [prod-user]
+    password: [prod-password]
+    role: [prod-role]
+    database: PRICING_DIFF_PROD
+    schema: analytics
+    threads: 4
+```
+
+---
+
+## Resources
+
+- [dbt Documentation](https://docs.getdbt.com/)
+- [Snowflake dbt Adapter](https://docs.getdbt.com/reference/warehouse-setups/snowflake-setup)
+- [dbt Best Practices](https://docs.getdbt.com/guides/best-practices)
+- [Dimensional Modeling](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/)
+
+---
