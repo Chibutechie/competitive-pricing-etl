@@ -22,13 +22,14 @@ clean-targets:
 # Model configurations
 models:
   pricing_difference:
-
-    # Staging models
     staging:
       +materialized: view
       +schema: staging
 
-    # Mart models
     marts:
       +materialized: table
       +schema: marts
+      dimensions:
+        +materialized: table
+      facts:
+        +materialized: table
