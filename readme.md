@@ -47,25 +47,38 @@ pricing_difference/
 ├── models/
 │   ├── staging/
 │   │   ├── stg_competitor_pricing.sql        # Staging model with cleaning & type casting
-│   │   └── sources.yml                        # Source definitions & freshness checks
+│   │   ├── sources.yml                        # Source definitions & freshness checks
+│   │   └── schema.yml                         # Staging model tests & documentation
 │   │
-│   └── marts/
-│       ├── dim_product.sql                    # Product dimension
-│       ├── dim_competitor.sql                 # Competitor dimension
-│       ├── dim_date.sql                       # Date dimension (calendar table)
-│       └── fct_competitor_pricing.sql         # Fact table (denormalized joined data)
+│   ├── marts/
+│   │   ├── schema.yml                         # Marts model tests & documentation
+│   │   ├── dimensions/
+│   │   │   ├── dim_product.sql                # Product dimension
+│   │   │   ├── dim_competitor.sql             # Competitor dimension
+│   │   │   └── dim_date.sql                   # Date dimension (calendar table)
+│   │   └── facts/
+│   │       └── fct_price.sql                  # Fact table (star schema)
+│   │
+│   └── exposures.yml                          # Downstream consumer documentation
 │
 ├── snapshots/
-│   └── snap_competitor_pricing.sql            # Snapshot for historical price tracking
+│   └── snap_competitor_pricing.sql            # Snapshot for historical price tracking (SCD Type 2)
 │
-├── tests/
-│   └── data_tests/                            # dbt data tests (unique, not_null, etc)
+├── macros/
+│   └── generate_schema.sql                    # Custom schema name macro
 │
+├── tests/                                     # Singular tests (generic tests in schema.yml)
+├── analyses/                                  # Ad-hoc analytical queries
+├── seeds/                                     # Reference data CSV files
+│
+├── dbt_packages/
+│   └── dbt_utils/                             # dbt utility package (v1.4.0)
+│
+├── packages.yml                               # dbt package dependencies
+├── package-lock.yml                           # Package dependency lock file
 ├── dbt_project.yml                            # dbt project configuration
-├── profiles.yml                               # Snowflake connection settings
-├── sources.yml                                # Source definitions with tests
-└── README.md
-
+├── README.md
+└── .gitignore
 ```
 
 ---
@@ -85,7 +98,7 @@ Raw Data (Snowflake)
     ↓              ↓              ↓
     └───────┬──────┴──────────────┘
             ↓
-[fct_competitor_pricing] ← Fact Table (Star Schema)
+[fct_price] ← Fact Table (Star Schema)
             ↓
 [snap_competitor_pricing] ← Historical Snapshot (SCD Type 2)
             ↓
@@ -129,17 +142,16 @@ Power BI / Analytics Tools
 
 #### **Facts**
 
-**fct_competitor_pricing**
+**fct_price**
 
-- `pricing_id` (PK - surrogate key)
+- `comparison_id` (PK)
 - `product_key` (FK → dim_product)
 - `competitor_key` (FK → dim_competitor)
-- `date_day` (FK → dim_date)
 - `our_price`, `competitor_price`
 - `price_difference`, `percent_difference`
 - `price_position`
-- `is_available`
-- `loaded_at`
+- `in_stock_competitor`
+- `date_checked`, `loaded_at`
 
 #### **Snapshots**
 
