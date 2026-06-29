@@ -1,0 +1,119 @@
+version: 2
+
+models:
+  - name: dim_competitor
+    description: One row per competitor, with surrogate key for fact table joins.
+    columns:
+      - name: competitor_key
+        description: Surrogate primary key generated from competitor_name.
+        tests:
+          - unique
+          - not_null
+      - name: competitor_name
+        description: Name of the competitor.
+        tests:
+          - unique
+          - not_null
+      - name: dbt_created_at
+        description: Timestamp when the row was first created by dbt.
+      - name: dbt_updated_at
+        description: Timestamp when the row was last updated by dbt.
+
+  - name: dim_product
+    description: One row per product, with surrogate key for fact table joins.
+    columns:
+      - name: product_key
+        description: Surrogate primary key generated from product_name.
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: Display name of the product.
+        tests:
+          - unique
+          - not_null
+      - name: dbt_created_at
+        description: Timestamp when the row was first created by dbt.
+      - name: dbt_updated_at
+        description: Timestamp when the row was last updated by dbt.
+
+  - name: dim_date
+    description: Date dimension covering 2024 (366 days) for time-based analysis.
+    columns:
+      - name: date_day
+        description: Calendar date.
+        tests:
+          - unique
+          - not_null
+      - name: date_key
+        description: Integer representation of the date in YYYYMMDD format.
+        tests:
+          - unique
+          - not_null
+      - name: year
+      - name: month
+      - name: day
+      - name: quarter
+      - name: month_name
+      - name: month_short
+      - name: day_name
+      - name: day_of_week
+      - name: week_of_year
+      - name: is_weekend
+      - name: first_day_of_month
+      - name: last_day_of_month
+      - name: first_day_of_year
+      - name: first_day_of_quarter
+
+  - name: fct_price
+    description: >
+      Fact table recording competitor price comparisons. Each row links a product
+      and competitor with pricing measures at a point in time.
+    columns:
+      - name: comparison_id
+        description: Primary key from the source staging table.
+        tests:
+          - unique
+          - not_null
+      - name: product_key
+        description: Foreign key to dim_product.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+      - name: competitor_key
+        description: Foreign key to dim_competitor.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_competitor')
+                field: competitor_key
+      - name: product_name
+        description: Denormalized product name for convenience.
+      - name: competitor_name
+        description: Denormalized competitor name for convenience.
+      - name: competitor_price
+        description: The competitor's listed price (NGN).
+      - name: our_price
+        description: Our listed price (NGN).
+      - name: price_difference
+        description: competitor_price minus our_price. Positive means we are cheaper.
+      - name: percent_difference
+        description: price_difference as a percentage of competitor_price.
+      - name: price_position
+        description: Classification of our price position (Cheaper, Expensive, Matched).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Cheaper", "Expensive", "Matched"]
+      - name: in_stock_competitor
+        description: Whether the competitor had the product in stock at check time.
+      - name: date_checked
+        description: Date the price comparison was captured.
+        tests:
+          - not_null
+      - name: loaded_at
+        description: Timestamp when the row was loaded into the warehouse.
