@@ -92,6 +92,10 @@ Raw Data (Snowflake)
 Power BI / Analytics Tools
 ```
 
+### dbt Lineage Graph
+
+![Lineage Graph](image/Screenshot%202026-06-29%20024338.png)
+
 ---
 
 ## Data Model
