@@ -1,10 +1,4 @@
-# Competitive Pricing Intelligence dbt Project
-
-A production-ready dbt project that transforms raw competitor pricing data into a dimensional star schema on Snowflake. This project implements staging models, dimension tables, fact tables, and Type 2 snapshots for historical tracking, with comprehensive data quality tests and automated transformations.
-
----
-
-## Project Overview
+# Project Overview
 
 This dbt project processes Nigerian retail competitor pricing data from Snowflake, applying layered transformations:
 
@@ -251,39 +245,38 @@ sources:
 `models/staging/stg_competitor_pricing.sql` cleans and types raw data:
 
 ```sql
+-- standardize columns, cast data types properly
 with source as (
-    select
-        "COMPARISON_ID"::varchar as comparison_id,
-        "PRODUCT_NAME"::varchar as product_name,
-        "COMPETITOR_NAME"::varchar as competitor_name,
-        "COMPETITOR_PRICE"::number(10, 2) as competitor_price,
-        "OUR_PRICE"::number(10, 2) as our_price,
-        "DATE_CHECKED"::date as date_checked,
-        "AVAILABLE_COMPETITOR"::boolean as is_available,
-        "LOADED_AT"::timestamp_ntz as loaded_at
-    from {{ source('pricing_difference', 'competitor_pricing') }}
+    select * from {{ source('pricing_difference', 'competitor_pricing') }}
 ),
 
-cleaned as (
+final as (
     select
-        comparison_id,
-        product_name,
-        competitor_name,
-        competitor_price,
-        our_price,
-        -- Recalculate metrics from source (never trust pre-calculated fields)
-        (our_price - competitor_price) as price_difference,
-        ((our_price - competitor_price) / competitor_price * 100)::float as percent_difference,
-        date_checked,
-        is_available,
-        loaded_at
+        "comparison_id"::varchar as comparison_id,
+        "competitor_name"::varchar as competitor_name,
+        "competitor_price_ngn"::numeric(10,2) as competitor_price,
+        "date_checked"::date as date_checked,
+        "day_of_week"::varchar as weekdays,
+        "in_stock_competitor"::boolean as in_stock_competitor,
+        "is_weekend"::boolean as is_weekend,
+        "loaded_at"::timestamp as loaded_at,
+        "month"::int as month_num,
+        "month_name"::varchar as month_name,
+        "our_price_ngn"::numeric(10,2) as our_price,
+        "price_difference_ngn"::numeric(10,2) as price_difference,
+           case
+            when "price_difference_percent" > 1 then "price_difference_percent" / 100.0
+            else "price_difference_percent"
+        end as percent_difference,
+        "price_position"::varchar as price_position,
+        "product_name"::varchar as product_name,
+        "week_number"::int as week_number,
+        "year"::int as year
+
     from source
-    where comparison_id is not null
-      and product_name is not null
-      and date_checked is not null
 )
 
-select * from cleaned
+select * from final
 ```
 
 **Materialization:** `view`
@@ -313,22 +306,20 @@ Dimensions are slowly-changing entities referenced by facts.
 #### dim_product
 
 ```sql
--- models/marts/dim_product.sql
-with source as (
-    select distinct
-        product_name,
-        row_number() over (order by product_name) as product_key
+-- models/marts/dimensions/dim_product.sql
+with distinct_competitors as (
+    select distinct product_name
     from {{ ref('stg_competitor_pricing') }}
     where product_name is not null
 ),
 
 final as (
     select
-        product_key,
+        {{ dbt_utils.generate_surrogate_key(['product_name']) }} as product_key,
         product_name,
         current_timestamp() as dbt_created_at,
         current_timestamp() as dbt_updated_at
-    from source
+    from distinct_competitors
 )
 
 select * from final
@@ -337,22 +328,20 @@ select * from final
 #### dim_competitor
 
 ```sql
--- models/marts/dim_competitor.sql
-with source as (
-    select distinct
-        competitor_name,
-        row_number() over (order by competitor_name) as competitor_key
+-- models/marts/dimensions/dim_competitor.sql
+with distinct_competitors as (
+    select distinct competitor_name
     from {{ ref('stg_competitor_pricing') }}
     where competitor_name is not null
 ),
 
 final as (
     select
-        competitor_key,
+        {{ dbt_utils.generate_surrogate_key(['competitor_name']) }} as competitor_key,
         competitor_name,
         current_timestamp() as dbt_created_at,
         current_timestamp() as dbt_updated_at
-    from source
+    from distinct_competitors
 )
 
 select * from final
@@ -361,7 +350,7 @@ select * from final
 #### dim_date
 
 ```sql
--- models/marts/dim_date.sql
+-- models/marts/dimensions/dim_date.sql
 with date_spine as (
     select dateadd(day, row_number() over (order by 1) - 1, '2024-01-01'::date) as date_day
     from table(generator(rowcount => 366))
@@ -370,17 +359,23 @@ with date_spine as (
 final as (
     select
         date_day,
-        year(date_day)::int as year,
-        month(date_day)::int as month_num,
-        to_varchar(date_day, 'MMMM') as month_name,
-        to_varchar(date_day, 'MMM') as month_short,
-        dayname(date_day) as day_name,
-        dayofweek(date_day)::int as day_of_week,
-        weekofyear(date_day)::int as week_number,
-        case when dayofweek(date_day) in (0, 6) then true else false end as is_weekend,
-        to_varchar(date_day, 'YYYYMMDD')::int as date_key
+        year(date_day)::int                              as year,
+        month(date_day)::int                             as month,
+        day(date_day)::int                               as day,
+        quarter(date_day)::int                           as quarter,
+        to_varchar(date_day, 'MMMM')                     as month_name,
+        to_varchar(date_day, 'MMM')                      as month_short,
+        dayname(date_day)                                as day_name,
+        dayofweek(date_day)::int                         as day_of_week,
+        weekofyear(date_day)::int                        as week_of_year,
+        case when dayofweek(date_day) in (0, 6)
+             then true else false end                    as is_weekend,
+        date_trunc('month', date_day)                    as first_day_of_month,
+        last_day(date_day, 'month')                      as last_day_of_month,
+        date_trunc('year', date_day)                     as first_day_of_year,
+        date_trunc('quarter', date_day)                  as first_day_of_quarter,
+        to_varchar(date_day, 'YYYYMMDD')::int            as date_key
     from date_spine
-    order by date_day
 )
 
 select * from final
@@ -399,41 +394,28 @@ select * from final
 `models/marts/fct_competitor_pricing.sql` - the central analytics table:
 
 ```sql
-with stg_pricing as (
-    select * from {{ ref('stg_competitor_pricing') }}
-),
+select
+    s.comparison_id,
+    p.product_key,
+    c.competitor_key,
+    s.product_name,
+    s.competitor_name,
+    s.competitor_price,
+    s.our_price,
+    s.price_difference,
+    s.percent_difference,
+    s.price_position,
+    s.in_stock_competitor,
+    s.date_checked,
+    s.loaded_at
 
-dim_product as (
-    select * from {{ ref('dim_product') }}
-),
+from {{ ref('stg_competitor_pricing') }} s
 
-dim_competitor as (
-    select * from {{ ref('dim_competitor') }}
-),
+left join {{ ref('dim_product') }} p
+    on s.product_name = p.product_name
 
-dim_date as (
-    select * from {{ ref('dim_date') }}
-),
-
-joined as (
-    select
-        {{ dbt_utils.surrogate_key(['stg_pricing.comparison_id', 'stg_pricing.date_checked']) }} as pricing_id,
-        dp.product_key,
-        dc.competitor_key,
-        dd.date_day,
-        stg_pricing.our_price,
-        stg_pricing.competitor_price,
-        stg_pricing.price_difference,
-        stg_pricing.percent_difference,
-        stg_pricing.is_available,
-        stg_pricing.loaded_at
-    from stg_pricing
-    left join dim_product dp on stg_pricing.product_name = dp.product_name
-    left join dim_competitor dc on stg_pricing.competitor_name = dc.competitor_name
-    left join dim_date dd on stg_pricing.date_checked = dd.date_day
-)
-
-select * from joined
+left join {{ ref('dim_competitor') }} c
+    on s.competitor_name = c.competitor_name
 ```
 
 **Materialization:** `table`
@@ -656,45 +638,6 @@ dbt docs serve  # localhost:8000
 
 ---
 
-## Common Issues & Solutions
-
-### Issue: `Invalid identifier 'COLUMN_NAME'`
-
-**Cause:** Snowflake uppercases unquoted identifiers.
-
-**Fix:** Quote uppercase source columns and cast to lowercase:
-
-```sql
-"COMPETITOR_PRICE"::number(10, 2) as competitor_price
-```
-
-### Issue: `Snapshot not capturing changes`
-
-**Cause:** `updated_at` column not reflecting actual updates.
-
-**Fix:** Verify the timestamp column updates on every data load:
-
-```sql
--- Check if loaded_at is updating
-select max(loaded_at) from raw.competitor_pricing;
-```
-
-### Issue: `Slow fact table queries`
-
-**Cause:** Joining three dimensions repeatedly.
-
-**Fix:** Denormalize in fact table (already done in this project). Consider clustering on frequently-filtered columns:
-
-```sql
-alter table fct_competitor_pricing cluster by (product_key, date_day);
-```
-
-### Issue: `Models fail with "model not found"`
-
-**Cause:** Circular dependencies or typo in `ref()` function.
-
-**Fix:** Check lineage:
-
 ```bash
 dbt docs generate
 dbt docs serve  # View DAG
@@ -784,6 +727,3 @@ where <expensive_calculation>
 - [Slowly Changing Dimensions](https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2)
 
 ---
-
-**GitHub:** [Chibutechie/competitive-pricing-etl](https://github.com/Chibutechie/competitive-pricing-etl)  
-**Last Updated:** June 29, 2026
