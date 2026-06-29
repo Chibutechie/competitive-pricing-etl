@@ -35,10 +35,11 @@ models:
         description: price_difference expressed as a percentage of competitor_price.
       - name: price_position
         description: Classification of our price relative to the competitor's.
-        tests:
+        data_tests:
           - accepted_values:
-              values: ["Cheaper", "Expensive", "Matched"]
-      - name: available_competitor
+              arguments:
+                values: ["Cheaper", "Expensive", "Matched"]
+      - name: in_stock_competitor
         description: Whether the competitor had the product in stock at check time.
       - name: date_checked
         description: Date the price comparison was captured.
