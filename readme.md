@@ -206,53 +206,11 @@ competitive-pricing-etl/
 
 ## Architecture: Two Layers, One Goal
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                  LAYER 1: PYTHON INGESTION                           │
-│                                                                      │
-│  HuggingFace API                                                     │
-│       │                                                              │
-│       ▼                                                              │
-│  extract.py  ──►  data/raw/  ──►  transform.py  ──►  data/processed/│
-│       │                  .parquet              │       .parquet      │
-│       └────────────────────────────────────────┘                     │
-│                                                    │                 │
-│                                                    ▼                 │
-│                                             load.py                  │
-│                                          (write_pandas)              │
-│                                                    │                 │
-└──────────────────────────────────────────────────────────────────────┘
-                                                    │
-                                                    ▼
-                                      ┌─────────────────────┐
-                                      │  Snowflake           │
-                                      │  PRICING_DIFF.RAW    │
-                                      │  .COMPETITOR_PRICING │
-                                      └─────────────────────┘
-                                                    │
-┌─────────────────────────────────────────────────────────────────────┐
-│                  LAYER 2: dbt TRANSFORMATION                         │
-│                                                                      │
-│               [sources.yml — freshness checks]                       │
-│                        │                                             │
-│                        ▼                                             │
-│         stg_competitor_pricing (VIEW — type casting)                 │
-│                        │                                             │
-│              ┌─────────┼──────────────┐                              │
-│              ▼         ▼              ▼                              │
-│      dim_product  dim_competitor  dim_date  (TABLES)                 │
-│              │         │              │                              │
-│              └─────────┼──────────────┘                              │
-│                        ▼                                             │
-│                fct_price (TABLE — star schema)                       │
-│                        │                                             │
-│                        ▼                                             │
-│       snap_competitor_pricing (SCD Type 2 snapshot)                 │
-│                        │                                             │
-│                        ▼                                             │
-│              Power BI / Analytics Tools                              │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Architecture Flow](image/architecture_flow_updated.png)
+
+### dbt Lineage Graph
+
+![dbt Lineage Graph](image/Screenshot%202026-06-29%20024944.png)
 
 ### Why Two Layers?
 
