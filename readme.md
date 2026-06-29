@@ -115,8 +115,6 @@ Power BI / Analytics Tools
 
 ### Star Schema Structure
 
-<img width="887" height="356" alt="image" src="https://github.com/user-attachments/assets/79635952-6c8c-42f2-b1d7-e631c6c0a963" />
-
 #### **Dimensions**
 
 **dim_product**
