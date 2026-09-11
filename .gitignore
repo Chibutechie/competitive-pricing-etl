@@ -1,5 +1,6 @@
 # Environment variables — never commit credentials
-.env
 
 __pycache__/
 logs/
+config.bat
+node_modules
